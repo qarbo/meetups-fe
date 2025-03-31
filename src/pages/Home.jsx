@@ -97,6 +97,12 @@ export default function Home() {
     }
   ]);
 
+  const groups = [
+    { id: 1, name: "Экономные путешественники", description: "Описание группы", link: "/group/travelers", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQzIZCg1zvmTSkUH_S4yCCbst5E3mD0lLLHAg&s" },
+    { id: 2, name: "Дизайнеры", description: "Описание группы", link: "/group/designers", image: "https://www.rmcad.edu/wp-content/uploads/2024/01/shutterstock_2194799541-min.jpg" },
+    { id: 3, name: "Московсие программисты", description: "Описание группы", link: "/group/programmers", image: "https://www.dice.com/binaries/large/content/gallery/dice/insights/2022/09/shutterstock_2079730714.jpg" },
+  ];
+
   let myEvents = events.slice(0, 2)
   let forMe = events.slice(2, 6)
 
@@ -163,6 +169,32 @@ export default function Home() {
           </Link>
         </div>
 
+        {/* Мои группы */}
+        <div>
+          <h3 className="text-xl font-bold mb-4">Мои группы</h3>
+          <div className="flex gap-4 overflow-x-auto">
+            {groups.map((group) => (
+              <Link
+                key={group.id}
+                to={group.link}
+                className="bg-white rounded shadow overflow-hidden hover:shadow-md transition block min-w-[200px] max-w-[200px]"
+              >
+                <div className="relative">
+                  <img
+                    src={group.image}
+                    alt={group.name}
+                    className="w-full h-40 object-cover"
+                  />
+                </div>
+                <div className="p-4">
+                  <h4 className="font-semibold">Группа "{group.name}"</h4>
+                  <p className="text-sm text-gray-600">{group.description}</p>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+
         {/* Блок с кнопками-фильтрами */}
         <div className="flex flex-wrap gap-2 mb-4">
           {categories.map((cat) => (
@@ -188,7 +220,7 @@ export default function Home() {
               <Link
                 key={event.id}
                 to={`/event/${event.id}`}
-                className="bg-white rounded shadow overflow-hidden hover:shadow-md transition block min-w-[200px]"
+                className="bg-white rounded shadow overflow-hidden hover:shadow-md transition block  min-w-[200px] max-w-[200px]"
               >
                 <div className="relative">
                   <img
@@ -219,7 +251,7 @@ export default function Home() {
               <Link
                 key={event.id}
                 to={`/event/${event.id}`}
-                className="bg-white rounded shadow overflow-hidden hover:shadow-md transition block min-w-[200px]"
+                className="bg-white rounded shadow overflow-hidden hover:shadow-md transition block  min-w-[200px] max-w-[200px]"
               >
                 <div className="relative">
                   <img
@@ -245,13 +277,6 @@ export default function Home() {
 
       {/* Правая колонка */}
       <aside className="space-y-6">
-        <div>
-          <h3 className="text-lg font-bold mb-2">Мои предстоящие мероприятия</h3>
-          <ul className="text-sm text-gray-700 list-disc list-inside space-y-1">
-            <li>Вебинар по React - 2025-05-06</li>
-            <li>Онлайн встреча с дизайнерами - 2025-05-08</li>
-          </ul>
-        </div>
         <div>
           <h3 className="text-lg font-bold mb-2">Недавние события</h3>
           <ul className="text-sm text-gray-700 list-disc list-inside space-y-1">

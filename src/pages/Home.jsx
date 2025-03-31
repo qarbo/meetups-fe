@@ -65,7 +65,40 @@ export default function Home() {
       month: "Мая",
       category: "outdoors",
     },
+    {
+      id: 4,
+      title: "Встреча стартаперов",
+      date: "2025-05-12",
+      location: "м. Пушкинская",
+      image: "https://elements-resized.envatousercontent.com/elements-video-cover-images/23bb2eaf-6c03-4377-907c-d096d99db6b5/video_preview/video_preview_0000.jpg?w=500&cf_fit=cover&q=85&format=auto&s=35e7e0bbdd375c22973e0cefb9d51f804bfcdbf757e44e36b1ccce276d6037f0",
+      day: "12",
+      month: "Мая",
+      category: "activism",
+    },
+    {
+      id: 5,
+      title: "Концерт группы",
+      date: "2025-05-14",
+      location: "м. Новокузнецкая",
+      image: "https://images.seattletimes.com/wp-content/uploads/2023/11/KISS-flames-at-Climate-Pledge-Arena-110-by-david-conger.jpg?d=780x520",
+      day: "14",
+      month: "Мая",
+      category: "hobbies",
+    },
+    {
+      id: 6,
+      title: "Фестиваль еды",
+      date: "2025-05-16",
+      location: "Центральный парк",
+      image: "https://i0.wp.com/newjerseyisntboring.com/wp-content/uploads/2025/03/img20240912_008.jpg?resize=800%2C445&ssl=1",
+      day: "16",
+      month: "Мая",
+      category: "outdoors",
+    }
   ]);
+
+  let myEvents = events.slice(0, 2)
+  let forMe = events.slice(2, 6)
 
   // Список категорий для переключения
   const categories = [
@@ -82,7 +115,7 @@ export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState("all");
 
   // Функция фильтрации
-  const filteredEvents = events.filter((event) => {
+  const filteredEvents = myEvents.filter((event) => {
     switch (selectedCategory) {
       case "all":
         return true;
@@ -147,15 +180,46 @@ export default function Home() {
           ))}
         </div>
 
-        {/* Популярное (или просто список) */}
+        {/* Мои предстоящие мероприятия */}
         <div>
-          <h3 className="text-xl font-bold mb-4">Мероприятия</h3>
-          <div className="grid md:grid-cols-3 gap-4">
-            {filteredEvents.map((event) => (
+          <h3 className="text-xl font-bold mb-4">Мои предстоящие мероприятия</h3>
+          <div className="flex gap-4 overflow-x-auto">
+            {filteredEvents.filter(event => new Date(event.date) >= new Date()).map((event) => (
               <Link
                 key={event.id}
                 to={`/event/${event.id}`}
-                className="bg-white rounded shadow overflow-hidden hover:shadow-md transition block"
+                className="bg-white rounded shadow overflow-hidden hover:shadow-md transition block min-w-[200px]"
+              >
+                <div className="relative">
+                  <img
+                    src={event.image}
+                    alt={event.title}
+                    className="w-full h-40 object-cover"
+                  />
+                  <div className="absolute top-2 left-2 bg-black bg-opacity-75 text-white text-sm px-2 py-1 rounded">
+                    <div className="font-bold leading-none text-center">{event.day}</div>
+                    <div className="text-xs leading-none">{event.month}</div>
+                  </div>
+                </div>
+                <div className="p-4">
+                  <h4 className="font-semibold">{event.title}</h4>
+                  <p className="text-sm text-gray-600">{event.location}</p>
+                  <p className="text-sm text-gray-600">{event.date}</p>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+
+        {/* Популярное (или просто список) */}
+        <div>
+          <h3 className="text-xl font-bold mb-4">Мероприятия для меня</h3>
+          <div className="flex gap-4 overflow-x-auto">
+            {forMe.map((event) => (
+              <Link
+                key={event.id}
+                to={`/event/${event.id}`}
+                className="bg-white rounded shadow overflow-hidden hover:shadow-md transition block min-w-[200px]"
               >
                 <div className="relative">
                   <img
@@ -181,6 +245,13 @@ export default function Home() {
 
       {/* Правая колонка */}
       <aside className="space-y-6">
+        <div>
+          <h3 className="text-lg font-bold mb-2">Мои предстоящие мероприятия</h3>
+          <ul className="text-sm text-gray-700 list-disc list-inside space-y-1">
+            <li>Вебинар по React - 2025-05-06</li>
+            <li>Онлайн встреча с дизайнерами - 2025-05-08</li>
+          </ul>
+        </div>
         <div>
           <h3 className="text-lg font-bold mb-2">Недавние события</h3>
           <ul className="text-sm text-gray-700 list-disc list-inside space-y-1">

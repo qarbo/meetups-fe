@@ -69,20 +69,26 @@ export default function Home() {
           <h3 className="text-xl font-bold mb-4">Популярное в вашем районе</h3>
           <div className="grid md:grid-cols-3 gap-4">
             {events.map((event) => (
-              <div key={event.id} className="bg-white rounded shadow overflow-hidden">
-                <div className="relative">
-                  <img src={event.image} alt={event.title} className="w-full h-40 object-cover" />
-                  <div className="absolute top-2 left-2 bg-black bg-opacity-75 text-white text-sm px-2 py-1 rounded">
-                    <div className="font-bold leading-none text-center">{event.day}</div>
-                    <div className="text-xs leading-none">{event.month}</div>
-                  </div>
-                </div>
-                <div className="p-4">
-                  <h4 className="font-semibold">{event.title}</h4>
-                  <p className="text-sm text-gray-600">{event.location}</p>
-                  <p className="text-sm text-gray-600">{event.date}</p>
-                </div>
-              </div>
+                <Link
+                    key={event.id}
+                    to={`/event/${event.id}`}
+                    className="bg-white rounded shadow overflow-hidden hover:shadow-md transition block"
+                >
+                    <div key={event.id} className="bg-white rounded shadow overflow-hidden">
+                        <div className="relative">
+                        <img src={event.image} alt={event.title} className="w-full h-40 object-cover" />
+                        <div className="absolute top-2 left-2 bg-black bg-opacity-75 text-white text-sm px-2 py-1 rounded">
+                            <div className="font-bold leading-none text-center">{event.day}</div>
+                            <div className="text-xs leading-none">{event.month}</div>
+                        </div>
+                        </div>
+                        <div className="p-4">
+                        <h4 className="font-semibold">{event.title}</h4>
+                        <p className="text-sm text-gray-600">{event.location}</p>
+                        <p className="text-sm text-gray-600">{event.date}</p>
+                        </div>
+                    </div>
+                </Link>
             ))}
           </div>
         </div>

@@ -1,168 +1,203 @@
 import React, { useState } from "react";
-import ReactQuill from "react-quill";
-import 'react-quill/dist/quill.snow.css';
 
 export default function CreateEvent() {
+  const [calendarType, setCalendarType] = useState("personal");
+  const [visibility, setVisibility] = useState("public");
   const [title, setTitle] = useState("");
-  const [date, setDate] = useState("");
+  const [start, setStart] = useState("");
+  const [end, setEnd] = useState("");
   const [location, setLocation] = useState("");
   const [description, setDescription] = useState("");
-
-  const [inviteEnabled, setInviteEnabled] = useState(false);
-  const [inviteEmails, setInviteEmails] = useState([]);
-  const [emailInput, setEmailInput] = useState("");
-  const [inviteBody, setInviteBody] = useState("");
-
-  const addEmail = (email) => {
-    const cleaned = email.trim();
-    if (
-      cleaned &&
-      /^[\w.-]+@([\w-]+\.)+[\w-]{2,4}$/g.test(cleaned) &&
-      !inviteEmails.includes(cleaned)
-    ) {
-      setInviteEmails([...inviteEmails, cleaned]);
-    }
-  };
-
-  const handleEmailKey = (e) => {
-    if (e.key === "Enter" || e.key === "," || e.key === " ") {
-      e.preventDefault();
-      addEmail(emailInput);
-      setEmailInput("");
-    }
-  };
-
-  const removeEmail = (emailToRemove) => {
-    setInviteEmails(inviteEmails.filter((e) => e !== emailToRemove));
-  };
+  const [tickets, setTickets] = useState("free");
+  const [requireApproval, setRequireApproval] = useState(false);
+  const [capacity, setCapacity] = useState("");
+  const [image, setImage] = useState(null); // Добавляем стейт для изображения
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const newEvent = {
+      calendarType,
+      visibility,
       title,
-      date,
+      start,
+      end,
       location,
       description,
-      invites: inviteEnabled
-        ? {
-            emails: inviteEmails,
-            body: inviteBody,
-          }
-        : null,
+      tickets,
+      requireApproval,
+      capacity,
+      image, // Можно отправить сам файл или его имя на сервер
     };
     console.log("Создано мероприятие:", newEvent);
+    // Здесь можно добавить логику отправки на сервер
   };
 
   return (
-    <div className="max-w-2xl mx-auto bg-white shadow p-6 rounded">
-      <h2 className="text-2xl font-bold mb-4">Создать мероприятие</h2>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        {/* Основные поля */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700">Название</label>
-          <input
-            type="text"
-            className="w-full border rounded px-3 py-2"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            required
-          />
+    <div className="min-h-screen p-4">
+      <div className="max-w-md mx-auto bg-gray-100 rounded-xl p-4 space-y-4">
+        {/* Верхняя панель с выбором календаря и публичности */}
+        <div className="flex justify-between">
+          <select
+            className="rounded px-2 py-1"
+            value={calendarType}
+            onChange={(e) => setCalendarType(e.target.value)}
+          >
+            <option value="personal">Личный календарь</option>
+            <option value="work">Рабочий календарь</option>
+          </select>
+
+          <select
+            className="rounded px-2 py-1"
+            value={visibility}
+            onChange={(e) => setVisibility(e.target.value)}
+          >
+            <option value="public">Публичное</option>
+            <option value="private">Приватное</option>
+          </select>
         </div>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700">Дата и время</label>
-          <input
-            type="datetime-local"
-            className="w-full border rounded px-3 py-2"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-            required
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700">Местоположение</label>
-          <input
-            type="text"
-            className="w-full border rounded px-3 py-2"
-            value={location}
-            onChange={(e) => setLocation(e.target.value)}
-            required
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700">Описание</label>
-          <textarea
-            className="w-full border rounded px-3 py-2"
-            rows="4"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-          />
-        </div>
-
-        {/* Чекбокс + форма приглашения */}
-        <div className="flex items-center space-x-2">
-          <input
-            type="checkbox"
-            id="invite"
-            checked={inviteEnabled}
-            onChange={() => setInviteEnabled(!inviteEnabled)}
-          />
-          <label htmlFor="invite" className="text-sm font-medium text-gray-700">
-            Отправить приглашения
-          </label>
-        </div>
-
-        {inviteEnabled && (
-          <div className="border p-4 rounded bg-gray-50 space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Email-адреса
-              </label>
-              <div className="w-full border rounded px-3 py-2 flex flex-wrap gap-2 min-h-[50px]">
-                {inviteEmails.map((email, idx) => (
-                  <span
-                    key={idx}
-                    className="bg-teal-100 text-teal-800 px-2 py-1 rounded-full flex items-center space-x-1 text-sm"
-                  >
-                    <span>{email}</span>
-                    <button
-                      type="button"
-                      onClick={() => removeEmail(email)}
-                      className="ml-1 text-teal-700 hover:text-red-500"
-                    >
-                      ✕
-                    </button>
-                  </span>
-                ))}
-                <input
-                  type="text"
-                  className="flex-grow outline-none text-sm"
-                  value={emailInput}
-                  onChange={(e) => setEmailInput(e.target.value)}
-                  onKeyDown={handleEmailKey}
-                  placeholder="Добавить email и нажать Enter"
+        {/* Форма создания события */}
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Загрузка изображения */}
+          <div>
+            <label className="block text-sm mb-1">Изображение для мероприятия</label>
+            <div className="flex items-center gap-2">
+              {image ? (
+                <img
+                  src={URL.createObjectURL(image)}
+                  alt="preview"
+                  className="w-24 h-24 object-cover rounded"
                 />
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Текст приглашения
+              ) : (
+                <div className="w-24 h-24 bg-gray-200 flex items-center justify-center rounded">
+                  <span className="text-gray-500 text-sm">Нет изображения</span>
+                </div>
+              )}
+              <label className="cursor-pointer bg-gray-300 text-gray-700 px-3 py-2 rounded hover:bg-gray-400">
+                Выбрать файл
+                <input
+                  type="file"
+                  className="hidden"
+                  accept="image/*"
+                  onChange={(e) => {
+                    if (e.target.files && e.target.files.length > 0) {
+                      setImage(e.target.files[0]);
+                    }
+                  }}
+                />
               </label>
-              <ReactQuill value={inviteBody} onChange={setInviteBody} />
             </div>
           </div>
-        )}
 
-        <button
-          type="submit"
-          className="bg-teal-600 text-white px-6 py-2 rounded hover:bg-teal-700"
-        >
-          Создать мероприятие
-        </button>
-      </form>
+          {/* Название события */}
+          <div>
+            <label className="block text-sm mb-1">Название события</label>
+            <input
+              type="text"
+              className="w-full rounded bg-gray-100 px-3 py-2"
+              placeholder="Название события"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+            />
+          </div>
+
+          {/* Дата и время начала */}
+          <div>
+            <label className="block text-sm mb-1">Дата и время начала</label>
+            <input
+              type="datetime-local"
+              className="w-full rounded px-3 py-2"
+              value={start}
+              onChange={(e) => setStart(e.target.value)}
+            />
+          </div>
+
+          {/* Дата и время окончания */}
+          <div>
+            <label className="block text-sm mb-1">Дата и время окончания</label>
+            <input
+              type="datetime-local"
+              className="w-full rounded px-3 py-2"
+              value={end}
+              onChange={(e) => setEnd(e.target.value)}
+            />
+          </div>
+
+          {/* Локация */}
+          <div>
+            <label className="block text-sm mb-1">Место проведения</label>
+            <input
+              type="text"
+              className="w-full rounded px-3 py-2"
+              placeholder="Офлайн место или ссылка для онлайн"
+              value={location}
+              onChange={(e) => setLocation(e.target.value)}
+            />
+          </div>
+
+          {/* Описание */}
+          <div>
+            <label className="block text-sm mb-1">Описание</label>
+            <textarea
+              className="w-full rounded px-3 py-2"
+              placeholder="Дополнительная информация"
+              rows={3}
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+            />
+          </div>
+
+          {/* Опции события */}
+          <div className="border-t pt-4 space-y-4">
+            {/* Билеты */}
+            <div className="flex items-center justify-between">
+              <label className="block text-sm mb-1">Билеты</label>
+              <select
+                className="rounded px-2 py-1"
+                value={tickets}
+                onChange={(e) => setTickets(e.target.value)}
+              >
+                <option value="free">Бесплатно</option>
+                <option value="paid">Платно</option>
+              </select>
+            </div>
+
+            {/* Требуется подтверждение */}
+            <div className="flex items-center justify-between">
+              <label className="block text-sm mb-1">Требуется подтверждение</label>
+              <label className="relative inline-flex items-center cursor-pointer">
+                <input
+                  type="checkbox"
+                  className="sr-only peer"
+                  checked={requireApproval}
+                  onChange={(e) => setRequireApproval(e.target.checked)}
+                />
+                <div className="w-11 h-6 rounded-full peer peer-focus:ring-2 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-green-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-500"></div>
+              </label>
+            </div>
+
+            {/* Вместимость */}
+            <div className="flex items-center justify-between">
+              <label className="block text-sm mb-1">Вместимость</label>
+              <input
+                type="text"
+                className="w-24 rounded px-3 py-1"
+                placeholder="Без ограничения"
+                value={capacity}
+                onChange={(e) => setCapacity(e.target.value)}
+              />
+            </div>
+          </div>
+
+          {/* Кнопка создания */}
+          <button
+            type="submit"
+            className="w-full bg-gray-300 py-2 rounded hover:bg-gray-400"
+          >
+            Создать событие
+          </button>
+        </form>
+      </div>
     </div>
   );
 }

@@ -20,8 +20,9 @@ export default function App() {
             {/* Desktop nav */}
             <nav className="hidden md:flex space-x-6">
               <Link to="/" className="text-sm hover:underline">Мероприятия</Link>
-              <Link to="/calendar" className="text-sm hover:underline">Группы</Link>
-              <Link to="/create" className="text-sm hover:underline">Создать</Link>
+              <Link to="/calendar" className="text-sm hover:underline">Календарь</Link>
+              <Link to="/chat" className="text-sm hover:underline">Чаты</Link>
+              <Link to="/profile" className="text-sm hover:underline">Аккаунт</Link>
             </nav>
 
             {/* Auth buttons */}
@@ -54,8 +55,9 @@ export default function App() {
           {mobileMenuOpen && (
             <div className="md:hidden px-4 pb-4 space-y-2">
               <Link to="/" className="block text-sm text-gray-700 hover:underline" onClick={() => setMobileMenuOpen(false)}>Мероприятия</Link>
-              <Link to="/calendar" className="block text-sm text-gray-700 hover:underline" onClick={() => setMobileMenuOpen(false)}>Группы</Link>
-              <Link to="/create" className="block text-sm text-gray-700 hover:underline" onClick={() => setMobileMenuOpen(false)}>Создать</Link>
+              <Link to="/calendar" className="block text-sm text-gray-700 hover:underline" onClick={() => setMobileMenuOpen(false)}>Календарь</Link>
+              <Link to="/chat" className="block text-sm text-gray-700 hover:underline" onClick={() => setMobileMenuOpen(false)}>Чаты</Link>
+              <Link to="/profile" className="block text-sm text-gray-700 hover:underline" onClick={() => setMobileMenuOpen(false)}>Аккаунт </Link>
               <hr className="border-gray-200" />
               <Link to="/login" className="block text-sm text-teal-600 hover:underline" onClick={() => setMobileMenuOpen(false)}>Войти</Link>
               <Link to="/register" className="block text-sm text-teal-600 hover:underline" onClick={() => setMobileMenuOpen(false)}>Регистрация</Link>

@@ -35,7 +35,6 @@ export default function CreateEvent() {
   };
 
   return (
-    <div className="min-h-screen p-4">
       <div className="max-w-md mx-auto bg-gray-100 rounded-xl p-4 space-y-4">
         {/* Верхняя панель с выбором календаря и публичности */}
         <div className="flex justify-between">
@@ -219,6 +218,5 @@ export default function CreateEvent() {
           </button>
         </form>
       </div>
-    </div>
   );
 }

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { FaUpload } from "react-icons/fa";
 
 export default function CreateEvent() {
   const [calendarType, setCalendarType] = useState("personal");
@@ -12,7 +13,7 @@ export default function CreateEvent() {
   const [tickets, setTickets] = useState("free");
   const [requireApproval, setRequireApproval] = useState(false);
   const [capacity, setCapacity] = useState("");
-  const [image, setImage] = useState(null); // Стейт для изображения
+  const [image, setImage] = useState(null);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -28,13 +29,14 @@ export default function CreateEvent() {
       tickets,
       requireApproval,
       capacity,
-      image, // Можно отправить сам файл или его имя на сервер
+      image,
     };
     console.log("Создано мероприятие:", newEvent);
     // Здесь можно добавить логику отправки на сервер
   };
 
   return (
+    <div className="min-h-screen p-4">
       <div className="max-w-md mx-auto bg-gray-100 rounded-xl p-4 space-y-4">
         {/* Верхняя панель с выбором календаря и публичности */}
         <div className="flex justify-between">
@@ -64,22 +66,20 @@ export default function CreateEvent() {
             <label className="block text-sm mb-1">
               Изображение для мероприятия
             </label>
-            <div className="flex items-center gap-2">
+            <div className="relative w-full">
               {image ? (
                 <img
                   src={URL.createObjectURL(image)}
                   alt="preview"
-                  className="w-24 h-24 object-cover rounded"
+                  className="w-full h-64 object-cover rounded"
                 />
               ) : (
-                <div className="w-24 h-24 bg-gray-200 flex items-center justify-center rounded">
-                  <span className="text-gray-500 text-sm">
-                    Нет изображения
-                  </span>
+                <div className="w-full h-64 bg-gray-200 flex items-center justify-center rounded">
+                  <span className="text-gray-500 text-sm">Нет изображения</span>
                 </div>
               )}
-              <label className="cursor-pointer bg-gray-300 text-gray-700 px-3 py-2 rounded hover:bg-gray-400">
-                Выбрать файл
+              <label className="absolute bottom-2 right-2 cursor-pointer bg-gray-300 text-gray-700 p-2 rounded-full hover:bg-gray-400">
+                <FaUpload />
                 <input
                   type="file"
                   className="hidden"
@@ -108,9 +108,7 @@ export default function CreateEvent() {
 
           {/* Дата и время начала */}
           <div>
-            <label className="block text-sm mb-1">
-              Дата и время начала
-            </label>
+            <label className="block text-sm mb-1">Дата и время начала</label>
             <input
               type="datetime-local"
               className="w-full rounded px-3 py-2"
@@ -218,5 +216,6 @@ export default function CreateEvent() {
           </button>
         </form>
       </div>
+    </div>
   );
 }

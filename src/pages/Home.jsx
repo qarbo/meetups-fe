@@ -179,7 +179,7 @@ export default function Home() {
         </div>
 
         {/* Блок с кнопками-фильтрами */}
-        <div className="flex flex-wrap gap-2 mb-4">
+        <div className="flex gap-2 mb-4 overflow-x-auto whitespace-nowrap">
           {categories.map((cat) => (
             <button
               key={cat.value}

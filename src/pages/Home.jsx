@@ -141,23 +141,6 @@ export default function Home() {
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
       {/* Левая основная колонка */}
       <div className="lg:col-span-2 space-y-8">
-        {/* Поисковый блок */}
-        <div>
-          <h2 className="text-3xl font-bold mb-4">Найдите свое следующее мероприятие</h2>
-          <div className="flex gap-4 max-w-xl">
-            <input
-              type="text"
-              placeholder="Искать мероприятия"
-              className="w-full border rounded px-4 py-2"
-            />
-            <input
-              type="text"
-              placeholder="Местоположение"
-              className="w-full border rounded px-4 py-2"
-            />
-            <button className="bg-teal-600 text-white px-6 rounded hover:bg-teal-700">Поиск</button>
-          </div>
-        </div>
 
         {/* Создать мероприятие */}
         <div className="mt-4">

@@ -7,9 +7,21 @@
   pointer-events: none;
 }
 
+body {
+  background-color: white;
+  color: black;
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: #1a202c; /* темный фон */
+    color: #f7fafc; /* светлый текст */
   }
 }
 

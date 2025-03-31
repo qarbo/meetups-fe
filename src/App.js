@@ -15,7 +15,7 @@ export default function App() {
       <div className="min-h-screen bg-white text-gray-900 font-sans">
         <header className="border-b border-gray-200">
           <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-            <h1 className="text-2xl font-bold tracking-tight">ХЗ НАЗВАНИЕ</h1>
+            <Link to="/" className="text-2xl font-bold tracking-tight">ХЗ НАЗВАНИЕ</Link>
 
             {/* Desktop nav */}
             <nav className="hidden md:flex space-x-6">

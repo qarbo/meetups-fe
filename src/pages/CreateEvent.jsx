@@ -5,13 +5,14 @@ export default function CreateEvent() {
   const [visibility, setVisibility] = useState("public");
   const [title, setTitle] = useState("");
   const [start, setStart] = useState("");
-  const [end, setEnd] = useState("");
+  const [duration, setDuration] = useState("");
+  const [durationUnit, setDurationUnit] = useState("minutes");
   const [location, setLocation] = useState("");
   const [description, setDescription] = useState("");
   const [tickets, setTickets] = useState("free");
   const [requireApproval, setRequireApproval] = useState(false);
   const [capacity, setCapacity] = useState("");
-  const [image, setImage] = useState(null); // Добавляем стейт для изображения
+  const [image, setImage] = useState(null); // Стейт для изображения
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -20,7 +21,8 @@ export default function CreateEvent() {
       visibility,
       title,
       start,
-      end,
+      duration,
+      durationUnit,
       location,
       description,
       tickets,
@@ -60,7 +62,9 @@ export default function CreateEvent() {
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Загрузка изображения */}
           <div>
-            <label className="block text-sm mb-1">Изображение для мероприятия</label>
+            <label className="block text-sm mb-1">
+              Изображение для мероприятия
+            </label>
             <div className="flex items-center gap-2">
               {image ? (
                 <img
@@ -70,7 +74,9 @@ export default function CreateEvent() {
                 />
               ) : (
                 <div className="w-24 h-24 bg-gray-200 flex items-center justify-center rounded">
-                  <span className="text-gray-500 text-sm">Нет изображения</span>
+                  <span className="text-gray-500 text-sm">
+                    Нет изображения
+                  </span>
                 </div>
               )}
               <label className="cursor-pointer bg-gray-300 text-gray-700 px-3 py-2 rounded hover:bg-gray-400">
@@ -103,7 +109,9 @@ export default function CreateEvent() {
 
           {/* Дата и время начала */}
           <div>
-            <label className="block text-sm mb-1">Дата и время начала</label>
+            <label className="block text-sm mb-1">
+              Дата и время начала
+            </label>
             <input
               type="datetime-local"
               className="w-full rounded px-3 py-2"
@@ -112,15 +120,26 @@ export default function CreateEvent() {
             />
           </div>
 
-          {/* Дата и время окончания */}
+          {/* Продолжительность */}
           <div>
-            <label className="block text-sm mb-1">Дата и время окончания</label>
-            <input
-              type="datetime-local"
-              className="w-full rounded px-3 py-2"
-              value={end}
-              onChange={(e) => setEnd(e.target.value)}
-            />
+            <label className="block text-sm mb-1">Продолжительность</label>
+            <div className="flex gap-2">
+              <input
+                type="number"
+                className="w-full rounded px-3 py-2"
+                placeholder="Введите число"
+                value={duration}
+                onChange={(e) => setDuration(e.target.value)}
+              />
+              <select
+                className="rounded px-2 py-1"
+                value={durationUnit}
+                onChange={(e) => setDurationUnit(e.target.value)}
+              >
+                <option value="minutes">Минут</option>
+                <option value="hours">Часов</option>
+              </select>
+            </div>
           </div>
 
           {/* Локация */}
@@ -164,7 +183,9 @@ export default function CreateEvent() {
 
             {/* Требуется подтверждение */}
             <div className="flex items-center justify-between">
-              <label className="block text-sm mb-1">Требуется подтверждение</label>
+              <label className="block text-sm mb-1">
+                Требуется подтверждение
+              </label>
               <label className="relative inline-flex items-center cursor-pointer">
                 <input
                   type="checkbox"
@@ -172,7 +193,7 @@ export default function CreateEvent() {
                   checked={requireApproval}
                   onChange={(e) => setRequireApproval(e.target.checked)}
                 />
-                <div className="w-11 h-6 rounded-full peer peer-focus:ring-2 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-green-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-500"></div>
+                <div className="w-11 h-6 bg-green-700 rounded-full peer peer-focus:ring-2 peer-focus:ring-green-400 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-green-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-500"></div>
               </label>
             </div>
 

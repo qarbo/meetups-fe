@@ -204,7 +204,7 @@ export default function CreateEvent() {
               <label className="block text-sm mb-1">Дата и время</label>
               <div className="flex flex-col lg:flex-row rounded bg-[#FFD5DC] shadow ring-1 ring-[#E5E5E5] space-y-2 lg:space-y-0">
                 {/* Left labels */}
-                <div className="flex flex-col justify-center items-center px-4 py-3 space-y-8 border-r border-[#E5E5E5] min-w-[60px]">
+                {/* <div className="flex flex-col justify-center items-center px-4 py-3 space-y-8 border-r border-[#E5E5E5] min-w-[60px]">
                   <div className="flex items-center space-x-2">
                     <div className="w-3 h-3 rounded-full bg-[#1A1A1A]"></div>
                     <span className="text-sm text-gray-500">Start</span>
@@ -213,7 +213,7 @@ export default function CreateEvent() {
                     <div className="w-3 h-3 rounded-full bg-[#1A1A1A]"></div>
                     <span className="text-sm text-gray-500">End</span>
                   </div>
-                </div>
+                </div> */}
 
                 {/* Middle date/time inputs */}
                 <div className="flex flex-col justify-center px-4 py-3 space-y-2 w-full">
@@ -250,7 +250,7 @@ export default function CreateEvent() {
                 </div>
 
                 {/* Right timezone selector */}
-                <div className="flex flex-col justify-center items-center px-4 py-3 border-t lg:border-t-0 lg:border-l border-[#E5E5E5] w-full lg:w-auto text-sm text-gray-500">
+                {/* <div className="flex flex-col justify-center items-center px-4 py-3 border-t lg:border-t-0 lg:border-l border-[#E5E5E5] w-full lg:w-auto text-sm text-gray-500">
                   <select
                     className="bg-[#FFD5DC] text-[#1A1A1A] rounded px-2 py-1 ring-1 ring-[#E5E5E5]"
                     value={timezone}
@@ -262,7 +262,7 @@ export default function CreateEvent() {
                       </option>
                     ))}
                   </select>
-                </div>
+                </div> */}
               </div>
             </div>
 

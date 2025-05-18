@@ -11,7 +11,7 @@ import EventDetails from "./pages/EventDetails";
 export default function App() {
   return (
     <Router>
-      <div className="min-h-screen bg-white text-gray-900 font-sans">
+      <div className="min-h-screen text-gray-900 font-sans">
         <header className="border-b border-gray-200">
           <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
             <Link to="/" className="text-2xl font-bold tracking-tight">ГДЕ?</Link>

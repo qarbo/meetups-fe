@@ -1,5 +1,7 @@
+import { useEffect } from "react";
 import React, { useState } from "react";
 import { FaUpload } from "react-icons/fa";
+import "../styles/emojiBackground.css";
 
 export default function CreateEvent() {
   const detectedTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
@@ -34,6 +36,59 @@ export default function CreateEvent() {
     "Australia/Sydney",
   ];
 
+  useEffect(() => {
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+    const dpr = window.devicePixelRatio || 1;
+  
+    const resize = () => {
+      canvas.width = window.innerWidth * dpr;
+      canvas.height = window.innerHeight * dpr;
+      canvas.style.width = "100vw";
+      canvas.style.height = "100vh";
+      ctx.scale(dpr, dpr);
+    };
+    resize();
+    window.addEventListener("resize", resize);
+  
+    const emojis = ["🎉", "🌈", "🔥", "💫", "🎈", "🍕", "🚀", "✨", "❤️"];
+    const particles = new Array(30).fill(0).map(() => ({
+      emoji: emojis[Math.floor(Math.random() * emojis.length)],
+      x: Math.random() * window.innerWidth,
+      y: Math.random() * window.innerHeight,
+      speedY: 0.3 + Math.random() * 0.7,
+      speedX: (Math.random() - 0.5) * 0.5,
+      size: 20 + Math.random() * 20,
+    }));
+  
+    let animationId;
+    const animate = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+  
+      for (let p of particles) {
+        p.y += p.speedY;
+        p.x += p.speedX;
+  
+        if (p.y > window.innerHeight) {
+          p.y = -50;
+          p.x = Math.random() * window.innerWidth;
+        }
+  
+        ctx.font = `${p.size}px serif`;
+        ctx.fillText(p.emoji, p.x, p.y);
+      }
+  
+      animationId = requestAnimationFrame(animate);
+    };
+  
+    animate();
+  
+    return () => {
+      cancelAnimationFrame(animationId);
+      window.removeEventListener("resize", resize);
+    };
+  }, []);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const newEvent = {
@@ -57,14 +112,23 @@ export default function CreateEvent() {
   };
 
   return (
-    <div className="min-h-screen p-6 bg-[#FFFFFF] text-[#1A1A1A]">
-      <div className="max-w-5xl mx-auto bg-white rounded-xl p-6 shadow-md flex gap-6 items-start">
+    <div style={{ position: "relative" }}>
+      <canvas id="canvas" style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        zIndex: -1,
+        width: "100vw",
+        height: "100vh"
+      }} />
+      <div className="min-h-screen p-6 text-[#1A1A1A]">
+        <div className="max-w-5xl mx-auto rounded-xl p-6 flex flex-col lg:flex-row gap-6 items-start">
         {/* Левый столбец: изображение и выбор календаря */}
-        <div className="w-1/2 max-w-sm flex flex-col gap-4">
+        <div className="w-full lg:w-1/2 max-w-sm flex flex-col gap-4">
           {/* Верхняя панель с выбором календаря и публичности */}
           <div className="flex justify-between">
             <select
-              className="rounded px-2 py-1 bg-[#F5F5F5] text-[#1A1A1A] placeholder:text-[#999999] ring-1 ring-[#E5E5E5]"
+              className="rounded px-2 py-1 bg-[#FFD5DC] text-[#1A1A1A] placeholder:text-[#999999] ring-1 ring-[#E5E5E5]"
               value={calendarType}
               onChange={(e) => setCalendarType(e.target.value)}
             >
@@ -73,7 +137,7 @@ export default function CreateEvent() {
             </select>
 
             <select
-              className="rounded px-2 py-1 bg-[#F5F5F5] text-[#1A1A1A] placeholder:text-[#999999] ring-1 ring-[#E5E5E5]"
+              className="rounded px-2 py-1 bg-[#FFD5DC] text-[#1A1A1A] placeholder:text-[#999999] ring-1 ring-[#E5E5E5]"
               value={visibility}
               onChange={(e) => setVisibility(e.target.value)}
             >
@@ -99,7 +163,7 @@ export default function CreateEvent() {
                   <span className="text-[#999999] text-sm">Нет изображения</span>
                 </div>
               )}
-              <label className="absolute bottom-2 right-2 cursor-pointer bg-[#F5F5F5] text-[#1A1A1A] p-2 rounded-full ring-1 ring-[#E5E5E5] hover:bg-[#E0E0E0]">
+              <label className="absolute bottom-2 right-2 cursor-pointer bg-[#FFD5DC] text-[#1A1A1A] p-2 rounded-full ring-1 ring-[#E5E5E5] hover:bg-[#E0E0E0]">
                 <FaUpload />
                 <input
                   type="file"
@@ -114,6 +178,8 @@ export default function CreateEvent() {
               </label>
             </div>
           </div>
+          {/* Отступ снизу для мобильных устройств */}
+          <div className="h-6 lg:hidden"></div>
         </div>
 
         {/* Правый столбец: все остальные поля формы */}
@@ -123,7 +189,7 @@ export default function CreateEvent() {
             <label className="block text-sm mb-1">Название события</label>
             <input
               type="text"
-              className="w-full rounded bg-[#F5F5F5] text-[#1A1A1A] placeholder:text-[#999999] px-3 py-2 ring-1 ring-[#E5E5E5]"
+              className="w-full rounded bg-[#FFD5DC] text-[#1A1A1A] placeholder:text-[#999999] px-3 py-2 ring-1 ring-[#E5E5E5]"
               placeholder="Название события"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
@@ -133,7 +199,7 @@ export default function CreateEvent() {
           {/* Дата и время начала и окончания */}
           <div>
             <label className="block text-sm mb-1">Дата и время</label>
-            <div className="flex rounded bg-[#F5F5F5] shadow ring-1 ring-[#E5E5E5]">
+            <div className="flex rounded bg-[#FFD5DC] shadow ring-1 ring-[#E5E5E5]">
               {/* Left labels */}
               <div className="flex flex-col justify-center items-center px-4 py-3 space-y-8 border-r border-[#E5E5E5] min-w-[60px]">
                 <div className="flex items-center space-x-2">
@@ -183,7 +249,7 @@ export default function CreateEvent() {
               {/* Right timezone selector */}
               <div className="flex flex-col justify-center items-center px-4 py-3 border-l border-[#E5E5E5] min-w-[80px] text-sm text-gray-500">
                 <select
-                  className="bg-[#F5F5F5] text-[#1A1A1A] rounded px-2 py-1 ring-1 ring-[#E5E5E5]"
+                  className="bg-[#FFD5DC] text-[#1A1A1A] rounded px-2 py-1 ring-1 ring-[#E5E5E5]"
                   value={timezone}
                   onChange={(e) => setTimezone(e.target.value)}
                 >
@@ -202,7 +268,7 @@ export default function CreateEvent() {
             <label className="block text-sm mb-1">Место проведения</label>
             <input
               type="text"
-              className="w-full rounded bg-[#F5F5F5] text-[#1A1A1A] placeholder:text-[#999999] px-3 py-2 ring-1 ring-[#E5E5E5]"
+              className="w-full rounded bg-[#FFD5DC] text-[#1A1A1A] placeholder:text-[#999999] px-3 py-2 ring-1 ring-[#E5E5E5]"
               placeholder="Офлайн место или ссылка для онлайн"
               value={location}
               onChange={(e) => setLocation(e.target.value)}
@@ -213,7 +279,7 @@ export default function CreateEvent() {
           <div>
             <label className="block text-sm mb-1">Описание</label>
             <textarea
-              className="w-full rounded bg-[#F5F5F5] text-[#1A1A1A] placeholder:text-[#999999] px-3 py-2 ring-1 ring-[#E5E5E5]"
+              className="w-full rounded bg-[#FFD5DC] text-[#1A1A1A] placeholder:text-[#999999] px-3 py-2 ring-1 ring-[#E5E5E5]"
               placeholder="Дополнительная информация"
               rows={3}
               value={description}
@@ -227,7 +293,7 @@ export default function CreateEvent() {
             <div className="flex items-center justify-between">
               <label className="block text-sm mb-1">Билеты</label>
               <select
-                className="rounded px-2 py-1 bg-[#F5F5F5] text-[#1A1A1A] placeholder:text-[#999999] ring-1 ring-[#E5E5E5]"
+                className="rounded px-2 py-1 bg-[#FFD5DC] text-[#1A1A1A] placeholder:text-[#999999] ring-1 ring-[#E5E5E5]"
                 value={tickets}
                 onChange={(e) => setTickets(e.target.value)}
               >
@@ -257,7 +323,7 @@ export default function CreateEvent() {
               <label className="block text-sm mb-1">Вместимость</label>
               <input
                 type="text"
-                className="w-24 rounded bg-[#F5F5F5] text-[#1A1A1A] placeholder:text-[#999999] px-3 py-1 ring-1 ring-[#E5E5E5]"
+                className="w-24 rounded bg-[#FFD5DC] text-[#1A1A1A] placeholder:text-[#999999] px-3 py-1 ring-1 ring-[#E5E5E5]"
                 placeholder="Без ограничения"
                 value={capacity}
                 onChange={(e) => setCapacity(e.target.value)}
@@ -268,11 +334,12 @@ export default function CreateEvent() {
           {/* Кнопка создания */}
           <button
             type="submit"
-            className="w-full bg-white text-[#1A1A1A] py-2 rounded ring-1 ring-[#E5E5E5] shadow-sm hover:bg-[#F5F5F5]"
+            className="w-full bg-white text-[#1A1A1A] py-2 rounded ring-1 ring-[#E5E5E5] shadow-sm hover:bg-[#FFC8D4]"
           >
             Создать событие
           </button>
         </form>
+        </div>
       </div>
     </div>
   );

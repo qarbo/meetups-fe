@@ -129,7 +129,7 @@ export default function CreateEvent() {
           {/* Верхняя панель с выбором календаря и публичности */}
           <div className="flex justify-between">
             <select
-              className="rounded px-2 py-1 bg-[#FFD5DC] text-[#1A1A1A] placeholder:text-[#999999]"
+              className="rounded px-2 py-1 bg-white/30 backdrop-blur-md text-[#1A1A1A] placeholder:text-[#999999]"
               value={calendarType}
               onChange={(e) => setCalendarType(e.target.value)}
             >
@@ -138,7 +138,7 @@ export default function CreateEvent() {
             </select>
 
             <select
-              className="rounded px-2 py-1 bg-[#FFD5DC] text-[#1A1A1A] placeholder:text-[#999999]"
+              className="rounded px-2 py-1 bg-white/30 backdrop-blur-md text-[#1A1A1A] placeholder:text-[#999999]"
               value={visibility}
               onChange={(e) => setVisibility(e.target.value)}
             >
@@ -192,7 +192,7 @@ export default function CreateEvent() {
               <label className="block text-sm mb-1">Название события</label>
               <input
                 type="text"
-                className="w-full rounded bg-[#FFD5DC] text-[#1A1A1A] placeholder:text-[#999999] px-3 py-2"
+                className="w-full rounded bg-white/30 backdrop-blur-md text-[#1A1A1A] placeholder:text-[#999999] px-3 py-2"
                 placeholder="Название события"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
@@ -202,7 +202,7 @@ export default function CreateEvent() {
             {/* Дата и время начала и окончания */}
             <div>
               <label className="block text-sm mb-1">Дата и время</label>
-              <div className="flex flex-col lg:flex-row rounded bg-[#FFD5DC] shadow space-y-2 lg:space-y-0">
+              <div className="flex flex-col lg:flex-row rounded bg-white/30 backdrop-blur-md shadow space-y-2 lg:space-y-0">
                 {/* Left labels */}
                 {/* <div className="flex flex-col justify-center items-center px-4 py-3 space-y-8 border-r border-[#E5E5E5] min-w-[60px]">
                   <div className="flex items-center space-x-2">
@@ -221,13 +221,13 @@ export default function CreateEvent() {
                   <div className="grid grid-cols-2 gap-4">
                     <input
                       type="date"
-                      className="rounded bg-white px-3 py-2 text-[#1A1A1A]"
+                      className="rounded bg-white/30 backdrop-blur-md px-3 py-2 text-[#1A1A1A]"
                       value={startDate}
                       onChange={(e) => setStartDate(e.target.value)}
                     />
                     <input
                       type="time"
-                      className="rounded bg-white px-3 py-2 text-[#1A1A1A]"
+                      className="rounded bg-white/30 backdrop-blur-md px-3 py-2 text-[#1A1A1A]"
                       value={startTime}
                       onChange={(e) => setStartTime(e.target.value)}
                     />
@@ -236,13 +236,13 @@ export default function CreateEvent() {
                   <div className="grid grid-cols-2 gap-4">
                     <input
                       type="date"
-                      className="rounded bg-white px-3 py-2 text-[#1A1A1A]"
+                      className="rounded bg-white/30 backdrop-blur-md px-3 py-2 text-[#1A1A1A]"
                       value={endDate}
                       onChange={(e) => setEndDate(e.target.value)}
                     />
                     <input
                       type="time"
-                      className="rounded bg-white px-3 py-2 text-[#1A1A1A]"
+                      className="rounded bg-white/30 backdrop-blur-md px-3 py-2 text-[#1A1A1A]"
                       value={endTime}
                       onChange={(e) => setEndTime(e.target.value)}
                     />
@@ -271,7 +271,7 @@ export default function CreateEvent() {
               <label className="block text-sm mb-1">Место проведения</label>
               <input
                 type="text"
-                className="w-full rounded bg-[#FFD5DC] text-[#1A1A1A] placeholder:text-[#999999] px-3 py-2"
+                className="w-full rounded bg-white/30 backdrop-blur-md text-[#1A1A1A] placeholder:text-[#999999] px-3 py-2"
                 placeholder="Офлайн место или ссылка для онлайн"
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
@@ -282,7 +282,7 @@ export default function CreateEvent() {
             <div>
               <label className="block text-sm mb-1">Описание</label>
               <textarea
-                className="w-full rounded bg-[#FFD5DC] text-[#1A1A1A] placeholder:text-[#999999] px-3 py-2"
+                className="w-full rounded bg-white/30 backdrop-blur-md text-[#1A1A1A] placeholder:text-[#999999] px-3 py-2"
                 placeholder="Дополнительная информация"
                 rows={3}
                 value={description}
@@ -296,7 +296,7 @@ export default function CreateEvent() {
               <div className="flex items-center justify-between">
                 <label className="block text-sm mb-1">Билеты</label>
                 <select
-                  className="rounded px-2 py-1 bg-[#FFD5DC] text-[#1A1A1A] placeholder:text-[#999999]"
+                  className="rounded px-2 py-1 bg-white/30 backdrop-blur-md text-[#1A1A1A] placeholder:text-[#999999]"
                   value={tickets}
                   onChange={(e) => setTickets(e.target.value)}
                 >
@@ -326,7 +326,7 @@ export default function CreateEvent() {
                 <label className="block text-sm mb-1">Вместимость</label>
                 <input
                   type="text"
-                  className="w-24 rounded bg-[#FFD5DC] text-[#1A1A1A] placeholder:text-[#999999] px-3 py-1"
+                  className="w-24 rounded bg-white/30 backdrop-blur-md text-[#1A1A1A] placeholder:text-[#999999] px-3 py-1"
                   placeholder="Без ограничения"
                   value={capacity}
                   onChange={(e) => setCapacity(e.target.value)}

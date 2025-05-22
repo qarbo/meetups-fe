@@ -97,184 +97,69 @@ export default function Home() {
     }
   ]);
 
-  const groups = [
-    { id: 1, name: "Экономные путешественники", description: "Описание группы", link: "/group/travelers", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQzIZCg1zvmTSkUH_S4yCCbst5E3mD0lLLHAg&s" },
-    { id: 2, name: "Дизайнеры", description: "Описание группы", link: "/group/designers", image: "https://www.rmcad.edu/wp-content/uploads/2024/01/shutterstock_2194799541-min.jpg" },
-    { id: 3, name: "Московсие программисты", description: "Описание группы", link: "/group/programmers", image: "https://www.dice.com/binaries/large/content/gallery/dice/insights/2022/09/shutterstock_2079730714.jpg" },
-  ];
-
-  let myEvents = events.slice(0, 2)
-  let forMe = events.slice(2, 6)
-
-  // Список категорий для переключения
-  const categories = [
-    { label: "Все", value: "all" },
-    { label: "Сегодня", value: "today" },
-    { label: "Завтра", value: "tomorrow" },
-    { label: "Выходные", value: "weekend" },
-    { label: "Активизм", value: "activism" },
-    { label: "Хобби", value: "hobbies" },
-    { label: "Прогулки/походы", value: "outdoors" },
-    // Добавляйте свои варианты…
-  ];
-
-  const [selectedCategory, setSelectedCategory] = useState("all");
-
-  // Функция фильтрации
-  const filteredEvents = myEvents.filter((event) => {
-    switch (selectedCategory) {
-      case "all":
-        return true;
-      case "today":
-        return isToday(event.date);
-      case "tomorrow":
-        return isTomorrow(event.date);
-      case "weekend":
-        return isThisWeekend(event.date);
-      default:
-        // Если это одна из "тематических" категорий
-        return event.category === selectedCategory;
-    }
-  });
+  // Получаем текущую дату для отображения
+  const today = new Date();
+  const daysOfWeek = ["воскресенье", "понедельник", "вторник", "среда", "четверг", "пятница", "суббота"];
+  const dayName = daysOfWeek[today.getDay()];
+  const options = { day: "numeric", month: "long" };
+  const formattedDate = today.toLocaleDateString("ru-RU", options);
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-      {/* Левая основная колонка */}
-      <div className="lg:col-span-2 space-y-8">
+    <div className="max-w-4xl mx-auto px-4 py-8">
+      <h1 className="text-3xl font-bold mb-2">Что происходит в Москве</h1>
+      <p className="text-gray-600 mb-6">Сегодня, {dayName}</p>
 
-        {/* Создать мероприятие */}
-        <div className="mt-4">
-          <Link
-            to="/create"
-            className="inline-block bg-teal-600 text-white px-5 py-2 rounded hover:bg-teal-700"
-          >
-            + Создать мероприятие
-          </Link>
-        </div>
-
-        {/* Мои группы */}
-        <div>
-          <h3 className="text-xl font-bold mb-4">Мои группы</h3>
-          <div className="flex gap-4 overflow-x-auto">
-            {groups.map((group) => (
-              <Link
-                key={group.id}
-                to={group.link}
-                className="bg-white rounded shadow overflow-hidden hover:shadow-md transition block min-w-[200px] max-w-[200px]"
-              >
-                <div className="relative">
-                  <img
-                    src={group.image}
-                    alt={group.name}
-                    className="w-full h-40 object-cover"
-                  />
-                </div>
-                <div className="p-4">
-                  <h4 className="font-semibold">Группа "{group.name}"</h4>
-                  <p className="text-sm text-gray-600">{group.description}</p>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
-
-        {/* Блок с кнопками-фильтрами */}
-        <div className="flex gap-2 mb-4 overflow-x-auto whitespace-nowrap">
-          {categories.map((cat) => (
-            <button
-              key={cat.value}
-              onClick={() => setSelectedCategory(cat.value)}
-              className={`px-4 py-2 rounded ${
-                selectedCategory === cat.value
-                  ? "bg-teal-600 text-white"
-                  : "bg-gray-200 text-gray-800"
-              }`}
-            >
-              {cat.label}
-            </button>
-          ))}
-        </div>
-
-        {/* Мои предстоящие мероприятия */}
-        <div>
-          <h3 className="text-xl font-bold mb-4">Мои предстоящие мероприятия</h3>
-          <div className="flex gap-4 overflow-x-auto">
-            {filteredEvents.filter(event => new Date(event.date) >= new Date()).map((event) => (
-              <Link
-                key={event.id}
-                to={`/event/${event.id}`}
-                className="bg-white rounded shadow overflow-hidden hover:shadow-md transition block  min-w-[200px] max-w-[200px]"
-              >
-                <div className="relative">
-                  <img
-                    src={event.image}
-                    alt={event.title}
-                    className="w-full h-40 object-cover"
-                  />
-                  <div className="absolute top-2 left-2 bg-black bg-opacity-75 text-white text-sm px-2 py-1 rounded">
-                    <div className="font-bold leading-none text-center">{event.day}</div>
-                    <div className="text-xs leading-none">{event.month}</div>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="md:col-span-2">
+          <div className="space-y-6">
+            {events.map((event) => {
+              const formattedTime = new Date(event.date).toLocaleTimeString("ru-RU", { hour: '2-digit', minute: '2-digit' });
+              return (
+                <Link
+                  key={event.id}
+                  to={`/event/${event.id}`}
+                  className="block"
+                >
+                  <div className="bg-white border rounded-lg p-4 flex items-start justify-between gap-4 shadow-sm hover:shadow transition">
+                    <div className="flex-1 min-w-0">
+                      <div className="text-sm text-gray-400">{formattedTime}</div>
+                      <h2 className="text-lg font-semibold mb-1 truncate">{event.title}</h2>
+                      <div className="flex items-center gap-2 text-sm text-gray-500 mb-1">
+                        <span role="img" aria-label="Организатор">👤</span>
+                        <span>Организатор: Имя Фамилия</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-sm text-gray-500">
+                        <span role="img" aria-label="Локация">📍</span>
+                        <span className="truncate">{event.location}</span>
+                      </div>
+                      <div className="flex mt-2 -space-x-2">
+                        <div className="w-6 h-6 rounded-full bg-gray-300 border-2 border-white" />
+                        <div className="w-6 h-6 rounded-full bg-gray-300 border-2 border-white" />
+                        <div className="w-6 h-6 rounded-full bg-gray-300 border-2 border-white" />
+                        <span className="text-xs text-gray-500 ml-2">+361</span>
+                      </div>
+                    </div>
+                    <img
+                      src={event.image}
+                      alt={event.title}
+                      className="w-24 h-24 rounded-lg object-cover flex-shrink-0"
+                    />
                   </div>
-                </div>
-                <div className="p-4">
-                  <h4 className="font-semibold">{event.title}</h4>
-                  <p className="text-sm text-gray-600">{event.location}</p>
-                  <p className="text-sm text-gray-600">{event.date}</p>
-                </div>
-              </Link>
-            ))}
+                </Link>
+              );
+            })}
           </div>
         </div>
-
-        {/* Популярное (или просто список) */}
-        <div>
-          <h3 className="text-xl font-bold mb-4">Мероприятия для меня</h3>
-          <div className="flex gap-4 overflow-x-auto">
-            {forMe.map((event) => (
-              <Link
-                key={event.id}
-                to={`/event/${event.id}`}
-                className="bg-white rounded shadow overflow-hidden hover:shadow-md transition block  min-w-[200px] max-w-[200px]"
-              >
-                <div className="relative">
-                  <img
-                    src={event.image}
-                    alt={event.title}
-                    className="w-full h-40 object-cover"
-                  />
-                  <div className="absolute top-2 left-2 bg-black bg-opacity-75 text-white text-sm px-2 py-1 rounded">
-                    <div className="font-bold leading-none text-center">{event.day}</div>
-                    <div className="text-xs leading-none">{event.month}</div>
-                  </div>
-                </div>
-                <div className="p-4">
-                  <h4 className="font-semibold">{event.title}</h4>
-                  <p className="text-sm text-gray-600">{event.location}</p>
-                  <p className="text-sm text-gray-600">{event.date}</p>
-                </div>
-              </Link>
-            ))}
+        <aside className="hidden md:block sticky top-8 space-y-4">
+          <div className="bg-white rounded-lg p-4 shadow text-center">
+            <div className="w-12 h-12 rounded-full mx-auto bg-teal-500 text-white flex items-center justify-center text-2xl">🌇</div>
+            <h3 className="text-lg font-semibold mt-2">Москва</h3>
+            <p className="text-sm text-gray-600">Следите за лучшими событиями в Москве и получайте уведомления первыми.</p>
+            <button className="mt-4 w-full py-2 bg-gray-100 text-gray-600 rounded">Подписаны</button>
           </div>
-        </div>
+          <img src="/moscow-map-placeholder.png" alt="Москва" className="rounded-lg shadow" />
+        </aside>
       </div>
-
-      {/* Правая колонка */}
-      <aside className="space-y-6">
-        <div>
-          <h3 className="text-lg font-bold mb-2">Недавние события</h3>
-          <ul className="text-sm text-gray-700 list-disc list-inside space-y-1">
-            <li>24 участника присоединились к «Бег в парке»</li>
-            <li>«Книжный клуб» создал новое мероприятие</li>
-          </ul>
-        </div>
-
-        <div>
-          <h3 className="text-lg font-bold mb-2">Присоединяйтесь к нам!</h3>
-          <button className="bg-teal-600 text-white w-full py-2 rounded hover:bg-teal-700">
-            Зарегистрироваться
-          </button>
-        </div>
-      </aside>
     </div>
   );
 }

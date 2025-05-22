@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
-import { FaHome, FaCalendarAlt, FaComments, FaUserAlt, FaSignInAlt, FaUserPlus } from "react-icons/fa";
+import { FaHome, FaCalendarAlt, FaComments, FaUserAlt, FaSignInAlt, FaUserPlus, FaSearch, FaBell } from "react-icons/fa";
 import Home from "./pages/Home";
 import Profile from "./pages/Profile";
 import Calendar from "./pages/Calendar";
@@ -8,15 +8,51 @@ import Chat from "./pages/Chat";
 import CreateEvent from "./pages/CreateEvent";
 import EventDetails from "./pages/EventDetails";
 import LandingPage from "./pages/LandingPage";
+import RegisterModal from "./components/RegisterModal";
+import LoginModal from "./components/LoginModal";
 
 const isAuthenticated = Boolean(localStorage.getItem("token"));
 
 export default function App() {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [showRegisterModal, setShowRegisterModal] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [userName, setUserName] = useState("");
+  const [userEmail, setUserEmail] = useState("");
+  const menuRef = useRef(null);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      fetch("http://localhost:8000/auth/me", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      })
+        .then(res => res.json())
+        .then(data => {
+          setUserName(data.name || "Без имени");
+          setUserEmail(data.email || "");
+        });
+    }
+  }, []);
+
+  useEffect(() => {
+    function handleClickOutside(e) {
+      if (menuRef.current && !menuRef.current.contains(e.target)) {
+        setMenuOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [menuRef]);
+
   return (
     <Router>
+      {showRegisterModal && <RegisterModal onClose={() => setShowRegisterModal(false)} />}
+      {showLoginModal && <LoginModal onClose={() => setShowLoginModal(false)} />}
       <div className="min-h-screen text-gray-900 font-sans">
-        <header className="border-b border-gray-200">
-          <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+        <header>
+          <div className="max-w-7xl mx-auto px-4 py-2 flex justify-between items-center">
             <Link to="/" className="text-2xl font-bold tracking-tight">ГДЕ?</Link>
 
             {/* Navigation visible on all devices, icons with labels on md and up */}
@@ -33,22 +69,49 @@ export default function App() {
                 <FaComments />
                 <span className="hidden md:inline">Чаты</span>
               </Link>
-              <Link to="/profile" className="text-sm hover:underline flex items-center gap-2">
-                <FaUserAlt />
-                <span className="hidden md:inline">Аккаунт</span>
-              </Link>
             </nav>
 
             {/* Auth buttons with icons and labels on md and up */}
-            <div className="flex space-x-2">
-              <Link to="/login" className="px-4 py-1 border border-teal-600 text-teal-600 rounded hover:bg-teal-50 text-sm flex items-center gap-2">
-                <FaSignInAlt />
-                <span className="hidden md:inline">Войти</span>
-              </Link>
-              <Link to="/register" className="px-4 py-1 bg-teal-600 text-white rounded hover:bg-teal-700 text-sm flex items-center gap-2">
-                <FaUserPlus />
-                <span className="hidden md:inline">Регистрация</span>
-              </Link>
+            <div className="flex items-center space-x-4 relative">
+              {isAuthenticated ? (
+                <>
+                  <span className="hidden md:inline text-sm text-gray-600">
+                    {new Date().toLocaleTimeString("en-US", { hour: "numeric", minute: "numeric", hour12: false })}
+                  </span>
+                  <Link to="/create" className="text-sm font-medium hover:underline">
+                    Создать встречу
+                  </Link>
+                  <button className="text-xl hover:text-gray-600"><FaSearch /></button>
+                  <button className="text-xl hover:text-gray-600"><FaBell /></button>
+                  <div ref={menuRef} className="relative">
+                    <button onClick={() => setMenuOpen(!menuOpen)} className="w-8 h-8 rounded-full overflow-hidden">
+                      <img src="https://cdn-icons-png.freepik.com/512/6858/6858441.png" alt="User" />
+                    </button>
+                    {menuOpen && (
+                      <div className="absolute right-0 top-full mt-1 w-48 bg-white rounded-lg shadow-lg py-2 text-left z-50">
+                        <div className="px-4 py-2 border-b">
+                          <p className="font-semibold">{userName}</p>
+                          <p className="text-xs text-gray-500">{userEmail}</p>
+                        </div>
+                        <Link to="/profile" className="block px-4 py-2 hover:bg-gray-100">View Profile</Link>
+                        <Link to="/settings" className="block px-4 py-2 hover:bg-gray-100">Settings</Link>
+                        <button onClick={() => { localStorage.removeItem("token"); window.location.reload(); }} className="w-full text-left px-4 py-2 hover:bg-gray-100">Sign Out</button>
+                      </div>
+                    )}
+                  </div>
+                </>
+              ) : (
+                <>
+                  <button onClick={() => setShowLoginModal(true)} className="px-4 py-1 bg-black text-white rounded hover:bg-gray-800 text-sm flex items-center gap-2">
+                    <FaSignInAlt />
+                    <span className="hidden md:inline">Войти</span>
+                  </button>
+                  <button onClick={() => setShowRegisterModal(true)} className="px-4 py-1 bg-black text-white rounded hover:bg-gray-800 text-sm flex items-center gap-2">
+                    <FaUserPlus />
+                    <span className="hidden md:inline">Регистрация</span>
+                  </button>
+                </>
+              )}
             </div>
           </div>
         </header>

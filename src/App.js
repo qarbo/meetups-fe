@@ -7,6 +7,9 @@ import Calendar from "./pages/Calendar";
 import Chat from "./pages/Chat";
 import CreateEvent from "./pages/CreateEvent";
 import EventDetails from "./pages/EventDetails";
+import LandingPage from "./pages/LandingPage";
+
+const isAuthenticated = Boolean(localStorage.getItem("token"));
 
 export default function App() {
   return (
@@ -52,12 +55,19 @@ export default function App() {
 
         <main className="max-w-7xl mx-auto px-4 py-6">
           <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/calendar" element={<Calendar />} />
-            <Route path="/chat" element={<Chat />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/create" element={<CreateEvent />} />
-            <Route path="/event/:id" element={<EventDetails />} />
+            {isAuthenticated ? (
+              <>
+                <Route path="/" element={<Home />} />
+                <Route path="/calendar" element={<Calendar />} />
+                <Route path="/chat" element={<Chat />} />
+                <Route path="/profile" element={<Profile />} />
+                <Route path="/create" element={<CreateEvent />} />
+                <Route path="/event/:id" element={<EventDetails />} />
+              </>
+            ) : (
+              <Route path="*" element={<LandingPage />} />
+            )}
+            {/* <Route path="/" element={<Home />} /> */}
           </Routes>
         </main>
       </div>

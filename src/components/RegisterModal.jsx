@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { API_BASE } from "../config";
 
 export default function RegisterModal({ onClose }) {
   const [email, setEmail] = useState("");
@@ -23,7 +24,7 @@ export default function RegisterModal({ onClose }) {
     }
 
     window.onTelegramAuth = function (user) {
-      fetch("http://localhost:3000/auth/telegram", {
+      fetch(`${window.location.protocol}//${window.location.hostname}:3000/auth/telegram`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(user),
@@ -48,7 +49,7 @@ export default function RegisterModal({ onClose }) {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch("http://localhost:8000/auth/register", {
+      const response = await fetch(`${API_BASE}/auth/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),

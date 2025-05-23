@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import { FaHome, FaCalendarAlt, FaComments, FaUserAlt, FaSignInAlt, FaUserPlus, FaSearch, FaBell } from "react-icons/fa";
+import { API_BASE } from "./config";
 import Home from "./pages/Home";
 import Profile from "./pages/Profile";
 import Calendar from "./pages/Calendar";
@@ -23,7 +24,7 @@ export default function App() {
 
   useEffect(() => {
     if (isAuthenticated) {
-      fetch("http://localhost:8000/auth/me", {
+      fetch(`${API_BASE}/auth/me`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },

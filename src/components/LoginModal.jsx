@@ -1,6 +1,5 @@
-
-
 import React, { useState } from "react";
+import { API_BASE } from "../config";
 
 export default function LoginModal({ onClose }) {
   const [email, setEmail] = useState("");
@@ -12,7 +11,7 @@ export default function LoginModal({ onClose }) {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch("http://localhost:8000/auth/login", {
+      const response = await fetch(`${API_BASE}/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),

@@ -121,7 +121,7 @@ export default function CreateEvent() {
         width: "100vw",
         height: "100vh"
       }} />
-      <div className="min-h-screen pt-20 px-6 pb-6 text-[#1A1A1A]">
+      <div className="min-h-screen px-6 pb-6 text-[#1A1A1A]">
         <div className="max-w-5xl mx-auto rounded-xl p-1 flex flex-col lg:flex-row gap-6 items-start">
         {/* Левый столбец: изображение и выбор календаря */}
         <div className="w-full lg:w-1/2 flex justify-center">

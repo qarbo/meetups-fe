@@ -4,6 +4,7 @@ import "../styles/emojiBackground.css";
 
 import RegisterModal from "../components/RegisterModal";
 import { AuthContext } from "../context/AuthContext";
+import defaultEventImage from "../assets/default-event.jpg";
 
 export default function CreateEvent() {
   // Вычисляем завтрашнюю дату и время (14:00)
@@ -68,7 +69,7 @@ export default function CreateEvent() {
     resize();
     window.addEventListener("resize", resize);
   
-    const emojis = ["🎉", "🌈", "🔥", "💫", "🎈", "🍕", "🚀", "✨", "❤️"];
+    const emojis = ["⚽️", "🥅", "🔥", "🚀"];
     const particles = new Array(30).fill(0).map(() => ({
       emoji: emojis[Math.floor(Math.random() * emojis.length)],
       x: Math.random() * window.innerWidth,
@@ -200,17 +201,11 @@ export default function CreateEvent() {
           {/* Загрузка изображения */}
           <div>
             <div className="relative w-full">
-              {image ? (
-                <img
-                  src={URL.createObjectURL(image)}
-                  alt="preview"
-                  className="w-full aspect-square object-cover rounded shadow-sm"
-                />
-              ) : (
-                <div className="w-full aspect-square bg-[#EFEFEF] flex items-center justify-center rounded shadow-sm">
-                  <span className="text-[#999999] text-sm">Нет изображения</span>
-                </div>
-              )}
+              <img
+                src={image ? URL.createObjectURL(image) : defaultEventImage}
+                alt="preview"
+                className="w-full aspect-square object-cover rounded shadow-sm"
+              />
               <label className="absolute bottom-2 right-2 cursor-pointer bg-[#FFD5DC] text-[#1A1A1A] p-2 rounded-full hover:bg-[#E0E0E0]">
                 <FaUpload />
                 <input

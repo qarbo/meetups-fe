@@ -8,5 +8,5 @@ canvas#canvas {
     width: 100vw;
     height: 100vh;
     pointer-events: none;
-    background: rgb(255, 228, 232);
+    background: rgb(238, 255, 242);
   }

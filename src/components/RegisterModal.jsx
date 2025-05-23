@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { API_BASE } from "../config";
+import { apiFetch } from "../api";
 
 export default function RegisterModal({ onClose }) {
   const [email, setEmail] = useState("");
@@ -49,7 +50,7 @@ export default function RegisterModal({ onClose }) {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch(`${API_BASE}/auth/register`, {
+      const response = await apiFetch(`/auth/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),

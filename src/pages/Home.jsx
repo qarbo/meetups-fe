@@ -105,7 +105,7 @@ export default function Home() {
   const formattedDate = today.toLocaleDateString("ru-RU", options);
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8">
+    <div className="max-w-4xl mx-auto px-4">
       <h1 className="text-3xl font-bold mb-2">Что происходит в Москве</h1>
       <p className="text-gray-600 mb-6">Сегодня, {dayName}</p>
 

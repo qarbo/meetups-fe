@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import { FaHome, FaCalendarAlt, FaComments, FaUserAlt, FaSignInAlt, FaUserPlus, FaSearch, FaBell } from "react-icons/fa";
 import { API_BASE } from "./config";
+import { apiFetch } from "./api";
 import Home from "./pages/Home";
 import Profile from "./pages/Profile";
 import Calendar from "./pages/Calendar";
@@ -24,7 +25,7 @@ export default function App() {
 
   useEffect(() => {
     if (isAuthenticated) {
-      fetch(`${API_BASE}/auth/me`, {
+      apiFetch(`/auth/me`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -51,14 +52,14 @@ export default function App() {
     <Router>
       {showRegisterModal && <RegisterModal onClose={() => setShowRegisterModal(false)} />}
       {showLoginModal && <LoginModal onClose={() => setShowLoginModal(false)} />}
-      <div className="min-h-screen text-gray-900 font-sans">
-        <header>
+      <div className="relative min-h-screen text-gray-900 font-sans">
+        <header className="fixed top-0 left-0 w-full z-50 bg-white/60 backdrop-blur-md shadow">
           <div className="max-w-7xl mx-auto px-4 py-2 flex justify-between items-center">
-            <Link to="/" className="text-2xl font-bold tracking-tight">ГДЕ?</Link>
+            <Link to={isAuthenticated ? ("/discover") : ("/")}  className="text-2xl font-bold tracking-tight">ГДЕ?</Link>
 
             {/* Navigation visible on all devices, icons with labels on md and up */}
             <nav className="flex space-x-6">
-              <Link to="/" className="text-sm hover:underline flex items-center gap-2">
+              <Link to="/discover" className="text-sm hover:underline flex items-center gap-2">
                 <FaHome />
                 <span className="hidden md:inline">Мероприятия</span>
               </Link>
@@ -117,21 +118,17 @@ export default function App() {
           </div>
         </header>
 
-        <main className="max-w-7xl mx-auto px-4 py-6">
+        <main className="pt-16">
           <Routes>
-            {isAuthenticated ? (
-              <>
-                <Route path="/" element={<Home />} />
-                <Route path="/calendar" element={<Calendar />} />
-                <Route path="/chat" element={<Chat />} />
-                <Route path="/profile" element={<Profile />} />
-                <Route path="/create" element={<CreateEvent />} />
-                <Route path="/event/:id" element={<EventDetails />} />
-              </>
-            ) : (
-              <Route path="*" element={<LandingPage />} />
-            )}
-            {/* <Route path="/" element={<Home />} /> */}
+            <>
+              <Route path="/" element={<LandingPage />} />
+              <Route path="/discover" element={<Home />} />
+              <Route path="/calendar" element={<Calendar />} />
+              <Route path="/chat" element={<Chat />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/create" element={<CreateEvent />} />
+              <Route path="/event/:id" element={<EventDetails />} />
+            </>
           </Routes>
         </main>
       </div>

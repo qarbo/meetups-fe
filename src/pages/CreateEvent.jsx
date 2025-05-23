@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext, useRef } from "react";
 import { FaUpload } from "react-icons/fa";
 import "../styles/emojiBackground.css";
 
@@ -6,14 +6,22 @@ import RegisterModal from "../components/RegisterModal";
 import { AuthContext } from "../context/AuthContext";
 
 export default function CreateEvent() {
+  // Вычисляем завтрашнюю дату и время (14:00)
+  const now = new Date();
+  const tomorrow = new Date(now);
+  tomorrow.setDate(now.getDate() + 1);
+  tomorrow.setHours(14, 0, 0, 0); // 14:00
+
+  const formattedDate = tomorrow.toISOString().split("T")[0];
+  const formattedTime = tomorrow.toTimeString().split(":").slice(0, 2).join(":");
   const detectedTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
   const [calendarType, setCalendarType] = useState("personal");
   const [visibility, setVisibility] = useState("public");
   const [title, setTitle] = useState("");
-  const [startDate, setStartDate] = useState("");
-  const [startTime, setStartTime] = useState("");
-  const [endDate, setEndDate] = useState("");
-  const [endTime, setEndTime] = useState("");
+  const [startDate, setStartDate] = useState(formattedDate);
+  const [startTime, setStartTime] = useState(formattedTime);
+  const [endDate, setEndDate] = useState(formattedDate);
+  const [endTime, setEndTime] = useState("15:00");
   const [location, setLocation] = useState("");
   const [description, setDescription] = useState("");
   const [tickets, setTickets] = useState("free");
@@ -21,6 +29,10 @@ export default function CreateEvent() {
   const [capacity, setCapacity] = useState("");
   const [image, setImage] = useState(null);
   const [timezone, setTimezone] = useState(detectedTimeZone);
+
+  // Suggestions for location
+  const [suggestions, setSuggestions] = useState([]);
+  const suggestBoxRef = useRef(null);
 
   const { isAuthenticated } = useContext(AuthContext);
   const [forceShowModal, setForceShowModal] = useState(false);
@@ -122,6 +134,26 @@ export default function CreateEvent() {
     // Здесь можно добавить логику отправки на сервер
   };
 
+  // Handler for location input change with Yandex suggest
+  const handleLocationChange = async (e) => {
+    const value = e.target.value;
+    setLocation(value);
+
+    if (value.length > 2) {
+      try {
+        const res = await fetch(
+          `https://search-maps.yandex.ru/v1/?text=${encodeURIComponent(value)}&type=geo&lang=ru_RU&apikey=d867a192-39e6-43bc-81fe-3465999ac6ce`
+        );
+        const data = await res.json();
+        setSuggestions(data.results || []);
+      } catch (err) {
+        setSuggestions([]);
+      }
+    } else {
+      setSuggestions([]);
+    }
+  };
+
   return (
     <>
       {forceShowModal && (
@@ -143,7 +175,7 @@ export default function CreateEvent() {
         <div className="max-w-5xl mx-auto rounded-xl p-1 flex flex-col lg:flex-row gap-6 items-start">
         {/* Левый столбец: изображение и выбор календаря */}
         <div className="w-full lg:w-1/2 flex justify-center">
-          <div className="w-full max-w-sm flex flex-col gap-4">
+          <div className="w-full max-w-md flex flex-col gap-4">
           {/* Верхняя панель с выбором календаря и публичности */}
           <div className="flex justify-between">
             <select
@@ -167,18 +199,15 @@ export default function CreateEvent() {
 
           {/* Загрузка изображения */}
           <div>
-            <label className="block text-sm mb-1">
-              Изображение для мероприятия
-            </label>
             <div className="relative w-full">
               {image ? (
                 <img
                   src={URL.createObjectURL(image)}
                   alt="preview"
-                  className="w-full h-64 object-cover rounded shadow-sm"
+                  className="w-full aspect-square object-cover rounded shadow-sm"
                 />
               ) : (
-                <div className="w-full h-64 bg-[#EFEFEF] flex items-center justify-center rounded shadow-sm">
+                <div className="w-full aspect-square bg-[#EFEFEF] flex items-center justify-center rounded shadow-sm">
                   <span className="text-[#999999] text-sm">Нет изображения</span>
                 </div>
               )}
@@ -198,7 +227,7 @@ export default function CreateEvent() {
             </div>
           </div>
           {/* Отступ снизу для мобильных устройств */}
-          <div className="h-6 lg:hidden"></div>
+          <div className="lg:hidden"></div>
           </div>
         </div>
 
@@ -206,8 +235,7 @@ export default function CreateEvent() {
         <form onSubmit={handleSubmit} className="flex-1 space-y-2 w-full flex flex-col items-center lg:items-stretch">
           <div className="w-full max-w-md">
             {/* Название события */}
-            <div>
-              <label className="block text-sm mb-1">Название события</label>
+            <div className="mb-2">
               <input
                 type="text"
                 className="w-full rounded bg-white/30 backdrop-blur-md text-[#1A1A1A] placeholder:text-[#999999] px-3 py-2"
@@ -218,8 +246,7 @@ export default function CreateEvent() {
             </div>
 
             {/* Дата и время начала и окончания */}
-            <div>
-              <label className="block text-sm mb-1">Дата и время</label>
+            <div className="mb-2">
               <div className="flex flex-col lg:flex-row rounded bg-white/30 backdrop-blur-md shadow space-y-2 lg:space-y-0">
                 {/* Left labels */}
                 {/* <div className="flex flex-col justify-center items-center px-4 py-3 space-y-8 border-r border-[#E5E5E5] min-w-[60px]">
@@ -236,7 +263,7 @@ export default function CreateEvent() {
                 {/* Middle date/time inputs */}
                 <div className="flex flex-col justify-center px-4 py-3 space-y-2 w-full">
                   {/* Start row */}
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-2 gap-4 mb-2">
                     <input
                       type="date"
                       className="rounded bg-white/30 backdrop-blur-md px-3 py-2 text-[#1A1A1A]"
@@ -251,7 +278,7 @@ export default function CreateEvent() {
                     />
                   </div>
                   {/* End row */}
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-2 gap-4 mb-2">
                     <input
                       type="date"
                       className="rounded bg-white/30 backdrop-blur-md px-3 py-2 text-[#1A1A1A]"
@@ -285,20 +312,36 @@ export default function CreateEvent() {
             </div>
 
             {/* Локация */}
-            <div>
-              <label className="block text-sm mb-1">Место проведения</label>
-              <input
-                type="text"
-                className="w-full rounded bg-white/30 backdrop-blur-md text-[#1A1A1A] placeholder:text-[#999999] px-3 py-2"
-                placeholder="Офлайн место или ссылка для онлайн"
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
-              />
+            <div className="mb-2"> 
+              <div className="relative" ref={suggestBoxRef}>
+                <input
+                  type="text"
+                  className="w-full rounded bg-white/30 backdrop-blur-md text-[#1A1A1A] placeholder:text-[#999999] px-3 py-2"
+                  placeholder="Офлайн место или ссылка для онлайн"
+                  value={location}
+                  onChange={handleLocationChange}
+                />
+                {suggestions.length > 0 && (
+                  <ul className="absolute top-full left-0 right-0 bg-white border rounded shadow mt-1 z-50 max-h-60 overflow-y-auto">
+                    {suggestions.map((s, idx) => (
+                      <li
+                        key={idx}
+                        className="px-3 py-2 hover:bg-gray-100 cursor-pointer text-sm"
+                        onClick={() => {
+                          setLocation(s.title.text);
+                          setSuggestions([]);
+                        }}
+                      >
+                        {s.title.text}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
             </div>
 
             {/* Описание */}
             <div>
-              <label className="block text-sm mb-1">Описание</label>
               <textarea
                 className="w-full rounded bg-white/30 backdrop-blur-md text-[#1A1A1A] placeholder:text-[#999999] px-3 py-2"
                 placeholder="Дополнительная информация"

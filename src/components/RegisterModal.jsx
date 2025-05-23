@@ -60,7 +60,7 @@ export default function RegisterModal({ onClose }) {
     setLoading(true);
     setError(null);
     try {
-      const response = await apiFetch(`/auth/register`, {
+      const response = await apiFetch(`/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),

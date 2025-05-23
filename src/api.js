@@ -14,8 +14,8 @@ export async function apiFetch(input, init = {}) {
   });
 
   if (response.status === 401) {
-    localStorage.removeItem("token");
-    window.location.reload();
+    localStorage.removeItem("token");          
+    window.location.replace("/");
     return;
   }
 

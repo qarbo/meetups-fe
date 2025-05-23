@@ -18,7 +18,7 @@ export default function Profile() {
         if (res.status === 401) {
           // Token expired or invalid – log out
           localStorage.removeItem("token");
-          window.location.href = "/";
+          window.location.replace("/"); // выполняет редирект
           return Promise.reject("Unauthorized");
         }
         if (!res.ok) {

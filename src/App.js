@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import { AuthProvider } from "./context/AuthContext";
 import { BrowserRouter as Router, Routes, Route, Link, useLocation } from "react-router-dom";
 import { FaHome, FaCalendarAlt, FaComments, FaUserAlt, FaSignInAlt, FaUserPlus, FaSearch, FaBell, FaUser, FaSignOutAlt } from "react-icons/fa";
 import { API_BASE } from "./config";
@@ -151,8 +152,10 @@ export default function App() {
   }
 
   return (
-    <Router>
-      <AppContent />
-    </Router>
+    <AuthProvider>
+      <Router>
+        <AppContent />
+      </Router>
+    </AuthProvider>
   );
 }

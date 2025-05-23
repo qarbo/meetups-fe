@@ -1,7 +1,9 @@
-import { useEffect } from "react";
-import React, { useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { FaUpload } from "react-icons/fa";
 import "../styles/emojiBackground.css";
+
+import RegisterModal from "../components/RegisterModal";
+import { AuthContext } from "../context/AuthContext";
 
 export default function CreateEvent() {
   const detectedTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
@@ -19,6 +21,9 @@ export default function CreateEvent() {
   const [capacity, setCapacity] = useState("");
   const [image, setImage] = useState(null);
   const [timezone, setTimezone] = useState(detectedTimeZone);
+
+  const { isAuthenticated } = useContext(AuthContext);
+  const [forceShowModal, setForceShowModal] = useState(false);
 
   const commonTimeZones = [
     "UTC",
@@ -89,6 +94,12 @@ export default function CreateEvent() {
     };
   }, []);
 
+  useEffect(() => {
+    if (!isAuthenticated) {
+      setForceShowModal(true);
+    }
+  }, [isAuthenticated]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const newEvent = {
@@ -112,6 +123,13 @@ export default function CreateEvent() {
   };
 
   return (
+    <>
+      {forceShowModal && (
+        <RegisterModal
+          onClose={() => {}}
+          forceOpen={true}
+        />
+      )}
     <div style={{ position: "relative" }}>
       <canvas id="canvas" style={{
         position: "fixed",
@@ -346,5 +364,6 @@ export default function CreateEvent() {
         </div>
       </div>
     </div>
+    </>
   );
 }

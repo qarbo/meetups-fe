@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { apiFetch } from "../api";
 
 export default function Profile() {
   const [user, setUser] = useState(null);
@@ -7,7 +8,7 @@ export default function Profile() {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    fetch("http://localhost:8000/auth/me", {
+    apiFetch("/auth/me", {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,

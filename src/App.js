@@ -51,6 +51,7 @@ export default function App() {
   function AppContent() {
     const location = useLocation();
     const isTransparentNavbar = location.pathname === "/create";
+    const currentPath = location.pathname;
     return (
       <>
         {showRegisterModal && <RegisterModal onClose={() => setShowRegisterModal(false)} />}
@@ -62,15 +63,30 @@ export default function App() {
 
             {/* Navigation visible on all devices, icons with labels on md and up */}
             <nav className="flex space-x-6">
-              <Link to="/discover" className="text-sm hover:underline flex items-center gap-2">
+              <Link
+                to="/discover"
+                className={`text-sm flex items-center gap-2 transition-colors duration-200 ${
+                  currentPath === "/discover" ? "text-black font-semibold" : "text-gray-500 hover:text-black"
+                }`}
+              >
                 <FaHome />
                 <span className="hidden md:inline">Мероприятия</span>
               </Link>
-              <Link to="/calendar" className="text-sm hover:underline flex items-center gap-2">
+              <Link
+                to="/calendar"
+                className={`text-sm flex items-center gap-2 transition-colors duration-200 ${
+                  currentPath === "/calendar" ? "text-black font-semibold" : "text-gray-500 hover:text-black"
+                }`}
+              >
                 <FaCalendarAlt />
                 <span className="hidden md:inline">Календарь</span>
               </Link>
-              <Link to="/chat" className="text-sm hover:underline flex items-center gap-2">
+              <Link
+                to="/chat"
+                className={`text-sm flex items-center gap-2 transition-colors duration-200 ${
+                  currentPath === "/chat" ? "text-black font-semibold" : "text-gray-500 hover:text-black"
+                }`}
+              >
                 <FaComments />
                 <span className="hidden md:inline">Чаты</span>
               </Link>
@@ -86,8 +102,6 @@ export default function App() {
                   <Link to="/create" className="text-sm font-medium hover:underline">
                     Создать встречу
                   </Link>
-                  <button className="text-xl hover:text-gray-600"><FaSearch /></button>
-                  <button className="text-xl hover:text-gray-600"><FaBell /></button>
                   <div ref={menuRef} className="relative">
                     <button onClick={() => setMenuOpen(!menuOpen)} className="w-8 h-8 rounded-full overflow-hidden">
                       <img src="https://cdn-icons-png.freepik.com/512/6858/6858441.png" alt="User" />

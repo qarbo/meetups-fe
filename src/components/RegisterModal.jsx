@@ -11,34 +11,41 @@ export default function RegisterModal({ onClose }) {
   useEffect(() => {
     const script = document.createElement("script");
     script.src = "https://telegram.org/js/telegram-widget.js?22";
-    script.async = true;
     script.setAttribute("data-telegram-login", "SocialAppAuthBot"); // Замените на своего бота
     script.setAttribute("data-size", "large");
     script.setAttribute("data-userpic", "false");
     script.setAttribute("data-request-access", "write");
-    script.setAttribute("data-onauth", "onTelegramAuth");
+    script.setAttribute("data-onauth", "onTelegramAuth(user)");
 
     const container = document.getElementById("telegram-login-button");
     if (container) {
       container.innerHTML = ""; // Очистим, чтобы не было дублей
       container.appendChild(script);
+    } else {
+      console.error("Telegram container not found");
     }
-
+    
     window.onTelegramAuth = function (user) {
-      fetch(`${window.location.protocol}//${window.location.hostname}:3000/auth/telegram`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(user),
-      })
-        .then((response) => {
+      (async () => {
+        try {
+          const response = await apiFetch(`/auth/telegram`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(user),
+          });
+
           if (response.ok) {
+            const data = await response.json();
+            localStorage.setItem("token", data.access_token || data.token);
             onClose();
             window.location.reload();
+          } else {
+            console.error("Auth response not ok:", response.status);
           }
-        })
-        .catch((err) => {
+        } catch (err) {
           console.error("Telegram auth error", err);
-        });
+        }
+      })();
     };
 
     return () => {

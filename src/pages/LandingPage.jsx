@@ -40,7 +40,7 @@ export default function LandingPage() {
         width: "100vw",
         height: "100vh"
       }} />
-      <div className="relative z-10 flex items-center justify-center h-full text-center">
+      <div className="relative z-10 flex items-center justify-center h-screen text-center overflow-hidden">
         <div>
           <h1 className="text-4xl font-bold mb-4">
             Незабываемые события <span className="text-pink-500">начинаются здесь.</span>

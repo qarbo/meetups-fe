@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import { API_BASE } from "../config";
+import React, { useState, useEffect } from "react";
 import { apiFetch } from "../api";
 
 export default function LoginModal({ onClose }) {
@@ -7,6 +6,51 @@ export default function LoginModal({ onClose }) {
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.src = "https://telegram.org/js/telegram-widget.js?22";
+    script.setAttribute("data-telegram-login", "SocialAppAuthBot"); // Замените на своего бота
+    script.setAttribute("data-size", "large");
+    script.setAttribute("data-userpic", "false");
+    script.setAttribute("data-request-access", "write");
+    script.setAttribute("data-onauth", "onTelegramAuth(user)");
+
+    const container = document.getElementById("telegram-login-button");
+    if (container) {
+      container.innerHTML = ""; // Очистим, чтобы не было дублей
+      container.appendChild(script);
+    } else {
+      console.error("Telegram container not found");
+    }
+    
+    window.onTelegramAuth = function (user) {
+      (async () => {
+        try {
+          const response = await apiFetch(`/auth/telegram`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(user),
+          });
+
+          if (response.ok) {
+            const data = await response.json();
+            localStorage.setItem("token", data.access_token || data.token);
+            onClose();
+            window.location.reload();
+          } else {
+            console.error("Auth response not ok:", response.status);
+          }
+        } catch (err) {
+          console.error("Telegram auth error", err);
+        }
+      })();
+    };
+
+    return () => {
+      delete window.onTelegramAuth;
+    };
+  }, []);
 
   const handleLogin = async () => {
     setLoading(true);
@@ -67,6 +111,7 @@ export default function LoginModal({ onClose }) {
             {loading ? "Загрузка..." : "Войти"}
           </button>
         </form>
+        <div id="telegram-login-button" className="w-full mt-3 flex items-center justify-center"></div>
         <button
           onClick={onClose}
           className="mt-2 text-sm text-gray-500 underline"

@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
-import { FaHome, FaCalendarAlt, FaComments, FaUserAlt, FaSignInAlt, FaUserPlus, FaSearch, FaBell } from "react-icons/fa";
+import { BrowserRouter as Router, Routes, Route, Link, useLocation } from "react-router-dom";
+import { FaHome, FaCalendarAlt, FaComments, FaUserAlt, FaSignInAlt, FaUserPlus, FaSearch, FaBell, FaUser, FaSignOutAlt } from "react-icons/fa";
 import { API_BASE } from "./config";
 import { apiFetch } from "./api";
 import Home from "./pages/Home";
@@ -48,12 +48,15 @@ export default function App() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [menuRef]);
 
-  return (
-    <Router>
-      {showRegisterModal && <RegisterModal onClose={() => setShowRegisterModal(false)} />}
-      {showLoginModal && <LoginModal onClose={() => setShowLoginModal(false)} />}
-      <div className="relative min-h-screen text-gray-900 font-sans">
-        <header className="fixed top-0 left-0 w-full z-50 bg-white/60 backdrop-blur-md shadow">
+  function AppContent() {
+    const location = useLocation();
+    const isTransparentNavbar = location.pathname === "/create";
+    return (
+      <>
+        {showRegisterModal && <RegisterModal onClose={() => setShowRegisterModal(false)} />}
+        {showLoginModal && <LoginModal onClose={() => setShowLoginModal(false)} />}
+        <div className="relative min-h-screen text-gray-900 font-sans">
+          <header className={`${isTransparentNavbar ? 'bg-gradient-to-b from-white to-transparent' : 'bg-gradient-to-b from-purple-100 to-transparent'} shadow-none`}>
           <div className="max-w-7xl mx-auto px-4 py-2 flex justify-between items-center">
             <Link to={isAuthenticated ? ("/discover") : ("/")}  className="text-2xl font-bold tracking-tight">ГДЕ?</Link>
 
@@ -95,43 +98,47 @@ export default function App() {
                           <p className="font-semibold">{userName}</p>
                           <p className="text-xs text-gray-500">{userEmail}</p>
                         </div>
-                        <Link to="/profile" className="block px-4 py-2 hover:bg-gray-100">View Profile</Link>
-                        <Link to="/settings" className="block px-4 py-2 hover:bg-gray-100">Settings</Link>
-                        <button onClick={() => { localStorage.removeItem("token"); window.location.reload(); }} className="w-full text-left px-4 py-2 hover:bg-gray-100">Sign Out</button>
+                        <Link to="/profile" className="block px-4 py-2 hover:bg-gray-100 flex items-center gap-2">
+                          <FaUser /> Профиль
+                        </Link>
+                        <button onClick={() => { localStorage.removeItem("token"); window.location.reload(); }} className="w-full text-left px-4 py-2 hover:bg-gray-100 flex items-center gap-2">
+                          <FaSignOutAlt /> Выйти
+                        </button>
                       </div>
                     )}
                   </div>
                 </>
               ) : (
-                <>
-                  <button onClick={() => setShowLoginModal(true)} className="px-4 py-1 bg-black text-white rounded hover:bg-gray-800 text-sm flex items-center gap-2">
-                    <FaSignInAlt />
-                    <span className="hidden md:inline">Войти</span>
-                  </button>
-                  <button onClick={() => setShowRegisterModal(true)} className="px-4 py-1 bg-black text-white rounded hover:bg-gray-800 text-sm flex items-center gap-2">
-                    <FaUserPlus />
-                    <span className="hidden md:inline">Регистрация</span>
-                  </button>
-                </>
+                <button onClick={() => setShowRegisterModal(true)} className="px-4 py-1 bg-black text-white rounded hover:bg-gray-800 text-sm flex items-center gap-2">
+                  <FaUserPlus />
+                  <span className="hidden md:inline">Вход / Регистрация</span>
+                </button>
               )}
             </div>
           </div>
         </header>
 
-        <main className="pt-16">
-          <Routes>
-            <>
-              <Route path="/" element={<LandingPage />} />
-              <Route path="/discover" element={<Home />} />
-              <Route path="/calendar" element={<Calendar />} />
-              <Route path="/chat" element={<Chat />} />
-              <Route path="/profile" element={<Profile />} />
-              <Route path="/create" element={<CreateEvent />} />
-              <Route path="/event/:id" element={<EventDetails />} />
-            </>
-          </Routes>
-        </main>
-      </div>
+          <main className="pt-16">
+            <Routes>
+              <>
+                <Route path="/" element={<LandingPage />} />
+                <Route path="/discover" element={<Home />} />ы
+                <Route path="/calendar" element={<Calendar />} />
+                <Route path="/chat" element={<Chat />} />
+                <Route path="/profile" element={<Profile />} />
+                <Route path="/create" element={<CreateEvent />} />
+                <Route path="/event/:id" element={<EventDetails />} />
+              </>
+            </Routes>
+          </main>
+        </div>
+      </>
+    );
+  }
+
+  return (
+    <Router>
+      <AppContent />
     </Router>
   );
 }

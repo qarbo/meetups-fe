@@ -5,6 +5,8 @@ import { FaUpload } from "react-icons/fa";
 import "../styles/emojiBackground.css";
 
 import RegisterModal from "../components/RegisterModal";
+import CustomDropdown from "../components/CustomDropdown";
+import InviteThemeModal from "../components/InviteThemeModal";
 import { AuthContext } from "../context/AuthContext";
 import defaultEventImage from "../assets/default-event.jpg";
 
@@ -20,7 +22,10 @@ export default function CreateEvent() {
   const detectedTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
   const [calendarType, setCalendarType] = useState("personal");
   const [visibility, setVisibility] = useState("public");
+  const [dropdownOpen, setDropdownOpen] = useState(false);
   const [title, setTitle] = useState("");
+  const [titleError, setTitleError] = useState(false);
+  const [locationError, setLocationError] = useState(false);
   const [startDate, setStartDate] = useState(formattedDate);
   const [startTime, setStartTime] = useState(formattedTime);
   const [endDate, setEndDate] = useState(formattedDate);
@@ -32,6 +37,16 @@ export default function CreateEvent() {
   const [capacity, setCapacity] = useState("");
   const [image, setImage] = useState(null);
   const [timezone, setTimezone] = useState(detectedTimeZone);
+
+  // Theme modal states
+  const [showThemeModal, setShowThemeModal] = useState(false);
+  const [selectedTheme, setSelectedTheme] = useState(null);
+  const themes = [
+    { id: "minimal", name: "Confetti", image: "https://images.lumacdn.com/themes/thumb/minimal.jpg" },
+    { id: "emoji", name: "Emoji", image: "https://images.lumacdn.com/themes/thumb/emoji.jpg" },
+    { id: "pattern", name: "Warp", image: "https://images.lumacdn.com/themes/thumb/pattern.jpg" },
+    // Можно добавить другие темы
+  ];
 
   // Suggestions for location
   const [suggestions, setSuggestions] = useState([]);
@@ -132,6 +147,14 @@ export default function CreateEvent() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!title.trim()) {
+      setTitleError(true);
+      return;
+    }
+    if (!location.trim()) {
+      setLocationError(true);
+      return;
+    }
     let imageUrl = null;
     let imageId = null;
     if (image) {
@@ -217,18 +240,6 @@ export default function CreateEvent() {
         {/* Левый столбец: изображение и выбор календаря */}
         <div className="w-full lg:w-1/2 flex justify-center">
           <div className="w-full max-w-md flex flex-col gap-4">
-          {/* Верхняя панель с выбором календаря и публичности */}
-          <div className="flex justify-between">
-
-            <select
-              className="rounded px-2 py-1 bg-white/30 backdrop-blur-md text-[#1A1A1A] placeholder:text-[#999999]"
-              value={visibility}
-              onChange={(e) => setVisibility(e.target.value)}
-            >
-              <option value="public">Публичное</option>
-              <option value="private">Приватное</option>
-            </select>
-          </div>
 
           {/* Загрузка изображения */}
           <div>
@@ -260,15 +271,46 @@ export default function CreateEvent() {
 
         {/* Правый столбец: все остальные поля формы */}
         <form onSubmit={handleSubmit} className="flex-1 space-y-2 w-full flex flex-col items-center lg:items-stretch">
+          {/* Верхняя панель с выбором календаря и публичности */}
+          <div className="flex justify-between">
+            <CustomDropdown
+              options={[
+                { value: "public", label: "🌐 Публичное", description: "Показывается в календаре и может быть выделено." },
+                { value: "private", label: "✨ Приватное", description: "Не отображается в календаре. Только по ссылке." }
+              ]}
+              selected={visibility}
+              setSelected={setVisibility}
+              align='left'
+            />
+          </div>
+          {/* Кнопка выбора темы приглашения */}
+          <div className="mb-2 flex items-center">
+            <button
+              type="button"
+              onClick={() => setShowThemeModal(true)}
+              className="bg-pink-500 text-white px-3 py-2 rounded"
+            >
+              Выбрать тему приглашения
+            </button>
+            {selectedTheme && (
+              <span className="ml-3 text-sm flex items-center">
+                <img src={selectedTheme.image} alt={selectedTheme.name} className="w-8 h-8 rounded mr-2" />
+                {selectedTheme.name}
+              </span>
+            )}
+          </div>
           <div className="w-full max-w-md">
             {/* Название события */}
             <div className="mb-2">
               <input
                 type="text"
-                className="w-full rounded bg-white/30 backdrop-blur-md text-[#1A1A1A] placeholder:text-[#999999] px-3 py-2"
+                className={`w-full rounded ${titleError ? 'border border-red-500' : ''} bg-white/30 backdrop-blur-md text-[#1A1A1A] placeholder:text-[#999999] px-3 py-2`}
                 placeholder="Название события"
                 value={title}
-                onChange={(e) => setTitle(e.target.value)}
+                onChange={(e) => {
+                  setTitle(e.target.value);
+                  if (titleError) setTitleError(false);
+                }}
               />
             </div>
 
@@ -343,10 +385,13 @@ export default function CreateEvent() {
               <div className="relative" ref={suggestBoxRef}>
                 <input
                   type="text"
-                  className="w-full rounded bg-white/30 backdrop-blur-md text-[#1A1A1A] placeholder:text-[#999999] px-3 py-2"
+                  className={`w-full rounded ${locationError ? 'border border-red-500' : ''} bg-white/30 backdrop-blur-md text-[#1A1A1A] placeholder:text-[#999999] px-3 py-2`}
                   placeholder="Офлайн место или ссылка для онлайн"
                   value={location}
-                  onChange={handleLocationChange}
+                  onChange={(e) => {
+                    setLocation(e.target.value);
+                    if (locationError) setLocationError(false);
+                  }}
                 />
                 {suggestions.length > 0 && (
                   <ul className="absolute top-full left-0 right-0 bg-white border rounded shadow mt-1 z-50 max-h-60 overflow-y-auto">
@@ -433,6 +478,15 @@ export default function CreateEvent() {
         </form>
         </div>
       </div>
+      {/* Модалка выбора темы приглашения */}
+      {showThemeModal && (
+        <InviteThemeModal
+          themes={themes}
+          selectedTheme={selectedTheme}
+          setSelectedTheme={setSelectedTheme}
+          onClose={() => setShowThemeModal(false)}
+        />
+      )}
     </div>
     </>
   );

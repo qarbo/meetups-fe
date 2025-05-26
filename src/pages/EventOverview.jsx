@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { apiFetch } from "../api";
 import { useParams, Link } from "react-router-dom";
 
 export default function EventOverview() {
@@ -6,7 +7,7 @@ export default function EventOverview() {
   const [event, setEvent] = useState(null);
 
   useEffect(() => {
-    fetch(`http://localhost:8000/events/${id}`)
+    apiFetch(`/events/${id}`)
       .then(res => {
         if (!res.ok) throw new Error("Не удалось загрузить событие");
         return res.json();

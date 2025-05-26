@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { apiFetch } from "../api";
 import { Link } from "react-router-dom";
 
 // Функции-помощники для сравнения дат
@@ -37,7 +38,7 @@ export default function Home() {
   const [events, setEvents] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:8000/events/")
+    apiFetch("/events/")
       .then((res) => {
         if (!res.ok) throw new Error("Failed to load events");
         return res.json();

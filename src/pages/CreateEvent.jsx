@@ -1,12 +1,13 @@
 import React, { useEffect, useState, useContext, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { apiFetch } from "../api";
-import { FaUpload } from "react-icons/fa";
+import { FaTheRedYeti, FaUpload } from "react-icons/fa";
 import "../styles/emojiBackground.css";
 
 import RegisterModal from "../components/RegisterModal";
 import CustomDropdown from "../components/CustomDropdown";
 import InviteThemeModal from "../components/InviteThemeModal";
+import { AnimatePresence } from "framer-motion";
 import { AuthContext } from "../context/AuthContext";
 import defaultEventImage from "../assets/invitation.png";
 
@@ -41,26 +42,27 @@ export default function CreateEvent() {
   const [inputFont, setInputFont] = useState('font-sans');
 
   // Canvas color state and options
-  const [canvasColor, setCanvasColor] = useState("bg-gray-200");
+  const [canvasColor, setCanvasColor] = useState("gray");
+  const [colorScheme, setColorScheme] = useState("light");
   const colorOptions = [
-    { id: "gray", color: "bg-gray-200" },
-    { id: "pink", color: "bg-pink-200" },
-    { id: "purple", color: "bg-purple-200" },
-    { id: "blue", color: "bg-blue-200" },
-    { id: "green", color: "bg-green-200" },
-    { id: "yellow", color: "bg-yellow-200" },
-    { id: "orange", color: "bg-orange-200" },
-    { id: "red", color: "bg-red-200" },
-    { id: "rainbow", color: "bg-gradient-to-r from-pink-200 via-yellow-200 to-blue-200" },
+    { id: "gray", color: "bg-gray-200", darkColor: "bg-gray-900"},
+    { id: "pink", color: "bg-pink-200", darkColor: "bg-pink-900" },
+    { id: "purple", color: "bg-purple-200", darkColor: "bg-purple-900" },
+    { id: "blue", color: "bg-blue-200", darkColor: "bg-blue-900" },
+    { id: "green", color: "bg-green-200", darkColor: "bg-green-900" },
+    { id: "yellow", color: "bg-yellow-200", darkColor: "bg-yellow-900" },
+    { id: "orange", color: "bg-orange-200", darkColor: "bg-orange-900" },
+    { id: "red", color: "bg-red-200", darkColor: "bg-red-900" },
+    { id: "rainbow", color: "bg-gradient-to-r from-pink-200 via-yellow-200 to-blue-200", darkColor: "bg-gradient-to-r from-pink-900 via-yellow-900 to-blue-900" },
   ];
 
   // Theme modal states
   const [showThemeModal, setShowThemeModal] = useState(false);
   const [selectedTheme, setSelectedTheme] = useState(null);
-  const themes = [
-    { id: "minimal", name: "Confetti", image: "https://images.lumacdn.com/themes/thumb/minimal.jpg" },
+  const moodThemes = [
+    { id: "minimal", name: "Minimal", image: "https://images.lumacdn.com/themes/thumb/minimal.jpg" },
     { id: "emoji", name: "Emoji", image: "https://images.lumacdn.com/themes/thumb/emoji.jpg" },
-    { id: "pattern", name: "Warp", image: "https://images.lumacdn.com/themes/thumb/pattern.jpg" },
+    { id: "pattern", name: "Pattern", image: "https://images.lumacdn.com/themes/thumb/pattern.jpg" },
     // Можно добавить другие темы
   ];
 
@@ -245,7 +247,9 @@ export default function CreateEvent() {
     <div style={{ position: "relative" }}>
       <canvas
         id="canvas"
-        className={`${canvasColor}`}
+        className={`${colorScheme === "light"
+          ? colorOptions.find(c => c.id === canvasColor)?.color
+          : colorOptions.find(c => c.id === canvasColor)?.darkColor}`}
         style={{
           position: "fixed",
           top: 0,
@@ -324,7 +328,7 @@ export default function CreateEvent() {
             <div className="mb-2">
               <input
                 type="text"
-                className={`w-full rounded ${titleError ? 'border border-red-500' : ''} bg-white/30 backdrop-blur-md text-[#1A1A1A] placeholder:text-[#999999] px-3 py-2 ${inputFont}`}
+                className={`w-full rounded ${titleError ? 'border border-red-500' : ''} bg-white/30 backdrop-blur-md ${colorScheme === "light" ? "text-[#1A1A1A]" : "text-white"} placeholder:text-[#999999] px-3 py-2 ${inputFont}`}
                 placeholder="Название события"
                 value={title}
                 onChange={(e) => {
@@ -355,13 +359,13 @@ export default function CreateEvent() {
                   <div className="grid grid-cols-2 gap-4 mb-2">
                     <input
                       type="date"
-                      className={`rounded bg-white/30 backdrop-blur-md px-3 py-2 text-[#1A1A1A] ${inputFont}`}
+                      className={`rounded bg-white/30 backdrop-blur-md px-3 py-2 ${colorScheme === "light" ? "text-[#1A1A1A]" : "text-white"} ${inputFont}`}
                       value={startDate}
                       onChange={(e) => setStartDate(e.target.value)}
                     />
                     <input
                       type="time"
-                      className={`rounded bg-white/30 backdrop-blur-md px-3 py-2 text-[#1A1A1A] ${inputFont}`}
+                      className={`rounded bg-white/30 backdrop-blur-md px-3 py-2 ${colorScheme === "light" ? "text-[#1A1A1A]" : "text-white"} ${inputFont}`}
                       value={startTime}
                       onChange={(e) => setStartTime(e.target.value)}
                     />
@@ -370,13 +374,13 @@ export default function CreateEvent() {
                   <div className="grid grid-cols-2 gap-4 mb-2">
                     <input
                       type="date"
-                      className={`rounded bg-white/30 backdrop-blur-md px-3 py-2 text-[#1A1A1A] ${inputFont}`}
+                      className={`rounded bg-white/30 backdrop-blur-md px-3 py-2 ${colorScheme === "light" ? "text-[#1A1A1A]" : "text-white"} ${inputFont}`}
                       value={endDate}
                       onChange={(e) => setEndDate(e.target.value)}
                     />
                     <input
                       type="time"
-                      className={`rounded bg-white/30 backdrop-blur-md px-3 py-2 text-[#1A1A1A] ${inputFont}`}
+                      className={`rounded bg-white/30 backdrop-blur-md px-3 py-2 ${colorScheme === "light" ? "text-[#1A1A1A]" : "text-white"} ${inputFont}`}
                       value={endTime}
                       onChange={(e) => setEndTime(e.target.value)}
                     />
@@ -405,7 +409,7 @@ export default function CreateEvent() {
               <div className="relative" ref={suggestBoxRef}>
                 <input
                   type="text"
-                  className={`w-full rounded ${locationError ? 'border border-red-500' : ''} bg-white/30 backdrop-blur-md text-[#1A1A1A] placeholder:text-[#999999] px-3 py-2 ${inputFont}`}
+                  className={`w-full rounded ${locationError ? 'border border-red-500' : ''} bg-white/30 backdrop-blur-md ${colorScheme === "light" ? "text-[#1A1A1A]" : "text-white"} placeholder:text-[#999999] px-3 py-2 ${inputFont}`}
                   placeholder="Офлайн место или ссылка для онлайн"
                   value={location}
                   onChange={(e) => {
@@ -435,7 +439,7 @@ export default function CreateEvent() {
             {/* Описание */}
             <div>
               <textarea
-                className={`w-full rounded bg-white/30 backdrop-blur-md text-[#1A1A1A] placeholder:text-[#999999] px-3 py-2 ${inputFont}`}
+                className={`w-full rounded bg-white/30 backdrop-blur-md ${colorScheme === "light" ? "text-[#1A1A1A]" : "text-white"} placeholder:text-[#999999] px-3 py-2 ${inputFont}`}
                 placeholder="Дополнительная информация"
                 rows={3}
                 value={description}
@@ -447,9 +451,9 @@ export default function CreateEvent() {
             <div className="border-t pt-4 space-y-4 border-[#E5E5E5]">
               {/* Билеты */}
               <div className="flex items-center justify-between">
-                <label className="block text-sm mb-1">Билеты</label>
+                <label className={`block text-sm mb-1 ${colorScheme === "light" ? "text-[#1A1A1A]" : "text-white"}`}>Билеты</label>
                 <select
-                  className={`rounded px-2 py-1 bg-white/30 backdrop-blur-md text-[#1A1A1A] placeholder:text-[#999999] ${inputFont}`}
+                  className={`rounded px-2 py-1 bg-white/30 backdrop-blur-md ${colorScheme === "light" ? "text-[#1A1A1A]" : "text-white"} placeholder:text-[#999999] ${inputFont}`}
                   value={tickets}
                   onChange={(e) => setTickets(e.target.value)}
                 >
@@ -460,7 +464,7 @@ export default function CreateEvent() {
 
               {/* Требуется подтверждение */}
               <div className="flex items-center justify-between">
-                <label className="block text-sm mb-1">
+                <label className={`block text-sm mb-1 ${colorScheme === "light" ? "text-[#1A1A1A]" : "text-white"}`}>
                   Требуется подтверждение
                 </label>
                 <label className="relative inline-flex items-center cursor-pointer">
@@ -476,10 +480,10 @@ export default function CreateEvent() {
 
               {/* Вместимость */}
               <div className="flex items-center justify-between">
-                <label className="block text-sm mb-1">Вместимость</label>
+                <label className={`block text-sm mb-1 ${colorScheme === "light" ? "text-[#1A1A1A]" : "text-white"}`}>Вместимость</label>
                 <input
                   type="text"
-                  className={`w-24 rounded bg-white/30 backdrop-blur-md text-[#1A1A1A] placeholder:text-[#999999] px-3 py-1 ${inputFont}`}
+                  className={`w-24 rounded bg-white/30 backdrop-blur-md ${colorScheme === "light" ? "text-[#1A1A1A]" : "text-white"} placeholder:text-[#999999] px-3 py-1 ${inputFont}`}
                   placeholder="Без ограничения"
                   value={capacity}
                   onChange={(e) => setCapacity(e.target.value)}
@@ -499,30 +503,40 @@ export default function CreateEvent() {
         </div>
       </div>
       {/* Модалка выбора темы приглашения */}
-      {showThemeModal && (
-        <InviteThemeModal
-          themes={themes}
-          selectedTheme={selectedTheme}
-          setSelectedTheme={setSelectedTheme}
-          onClose={() => setShowThemeModal(false)}
-          onColorChange={(color) => setCanvasColor(color)}
-          colorOptions={colorOptions}
-          onFontChange={(fontId) => {
-            const fontStyles = [
-              { id: "default", style: "font-sans" },
-              { id: "museo", style: "font-serif" },
-              { id: "factoria", style: "font-mono" },
-              { id: "garamond", style: "font-serif" },
-              { id: "roc", style: "font-serif" },
-              { id: "nunito", style: "font-sans" },
-              { id: "pearl", style: "font-sans" },
-              { id: "departure", style: "font-mono" },
-            ];
-            const selectedFont = fontStyles.find(f => f.id === fontId);
-            if (selectedFont) setInputFont(selectedFont.style);
-          }}
-        />
-      )}
+      <AnimatePresence>
+        {showThemeModal && (
+          <InviteThemeModal
+            themes={moodThemes}
+            selectedTheme={selectedTheme}
+            setSelectedTheme={setSelectedTheme}
+            onClose={() => setShowThemeModal(false)}
+            onColorChange={(colorId) => {
+              const selectedOption = colorOptions.find(c => c.id === colorId);
+              console.log("SELECTED OPTION")
+              console.log(selectedOption)
+              if (selectedOption) {
+                setCanvasColor(colorScheme === "light" ? selectedOption.id : selectedOption.id);
+              }
+            }}
+            onThemeChange={(newColorScheme) => setColorScheme(newColorScheme)}
+            colorOptions={colorOptions}
+            onFontChange={(fontId) => {
+              const fontStyles = [
+                { id: "default", style: "font-sans" },
+                { id: "museo", style: "font-serif" },
+                { id: "factoria", style: "font-mono" },
+                { id: "garamond", style: "font-serif" },
+                { id: "roc", style: "font-serif" },
+                { id: "nunito", style: "font-sans" },
+                { id: "pearl", style: "font-sans" },
+                { id: "departure", style: "font-mono" },
+              ];
+              const selectedFont = fontStyles.find(f => f.id === fontId);
+              if (selectedFont) setInputFont(selectedFont.style);
+            }}
+          />
+        )}
+      </AnimatePresence>
     </div>
     </>
   );

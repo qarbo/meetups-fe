@@ -38,6 +38,20 @@ export default function CreateEvent() {
   const [image, setImage] = useState(null);
   const [timezone, setTimezone] = useState(detectedTimeZone);
 
+  // Canvas color state and options
+  const [canvasColor, setCanvasColor] = useState("bg-white");
+  const colorOptions = [
+    { id: "gray", color: "bg-gray-200" },
+    { id: "pink", color: "bg-pink-200" },
+    { id: "purple", color: "bg-purple-200" },
+    { id: "blue", color: "bg-blue-200" },
+    { id: "green", color: "bg-green-200" },
+    { id: "yellow", color: "bg-yellow-200" },
+    { id: "orange", color: "bg-orange-200" },
+    { id: "red", color: "bg-red-200" },
+    { id: "rainbow", color: "bg-gradient-to-r from-pink-500 via-yellow-500 to-blue-500" },
+  ];
+
   // Theme modal states
   const [showThemeModal, setShowThemeModal] = useState(false);
   const [selectedTheme, setSelectedTheme] = useState(null);
@@ -227,14 +241,18 @@ export default function CreateEvent() {
         />
       )}
     <div style={{ position: "relative" }}>
-      <canvas id="canvas" style={{
-        position: "fixed",
-        top: 0,
-        left: 0,
-        zIndex: -1,
-        width: "100vw",
-        height: "100vh"
-      }} />
+      <canvas
+        id="canvas"
+        className={`${canvasColor}`}
+        style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          zIndex: -1,
+          width: "100vw",
+          height: "100vh"
+        }}
+      />
       <div className="min-h-screen px-6 pb-6 text-[#1A1A1A]">
         <div className="max-w-5xl mx-auto rounded-xl p-1 flex flex-col lg:flex-row gap-6 items-start">
         {/* Левый столбец: изображение и выбор календаря */}
@@ -266,6 +284,22 @@ export default function CreateEvent() {
           </div>
           {/* Отступ снизу для мобильных устройств */}
           <div className="lg:hidden"></div>
+          {/* Кнопка выбора темы приглашения (перемещено сюда) */}
+          <div className="mt-2 flex items-center">
+            <button
+              type="button"
+              onClick={() => setShowThemeModal(true)}
+              className="bg-white/40 backdrop-blur-md text-[#1A1A1A] px-3 py-2 rounded hover:bg-white/70"
+            >
+              Выбрать тему приглашения
+            </button>
+            {selectedTheme && (
+              <span className="ml-3 text-sm flex items-center">
+                <img src={selectedTheme.image} alt={selectedTheme.name} className="w-8 h-8 rounded mr-2" />
+                {selectedTheme.name}
+              </span>
+            )}
+          </div>
           </div>
         </div>
 
@@ -282,22 +316,6 @@ export default function CreateEvent() {
               setSelected={setVisibility}
               align='left'
             />
-          </div>
-          {/* Кнопка выбора темы приглашения */}
-          <div className="mb-2 flex items-center">
-            <button
-              type="button"
-              onClick={() => setShowThemeModal(true)}
-              className="bg-pink-500 text-white px-3 py-2 rounded"
-            >
-              Выбрать тему приглашения
-            </button>
-            {selectedTheme && (
-              <span className="ml-3 text-sm flex items-center">
-                <img src={selectedTheme.image} alt={selectedTheme.name} className="w-8 h-8 rounded mr-2" />
-                {selectedTheme.name}
-              </span>
-            )}
           </div>
           <div className="w-full max-w-md">
             {/* Название события */}
@@ -485,6 +503,8 @@ export default function CreateEvent() {
           selectedTheme={selectedTheme}
           setSelectedTheme={setSelectedTheme}
           onClose={() => setShowThemeModal(false)}
+          onColorChange={(color) => setCanvasColor(color)}
+          colorOptions={colorOptions}
         />
       )}
     </div>

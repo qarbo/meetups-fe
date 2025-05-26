@@ -119,7 +119,7 @@ export default function CreateEvent() {
   const uploadImageToServer = async (file) => {
     const formData = new FormData();
     formData.append("image", file);
-    const response = await fetch("http://localhost:8000/images/upload/", {
+    const response = await apiFetch("/images/upload/", {
       method: "POST",
       body: formData,
     });

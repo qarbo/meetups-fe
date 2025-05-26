@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 
-export default function InviteThemeModal({ themes, selectedTheme, setSelectedTheme, onClose, onColorChange, colorOptions }) {
+export default function InviteThemeModal({ themes, selectedTheme, setSelectedTheme, onClose, onColorChange, colorOptions, onFontChange }) {
   const colors = [
     { id: "gray", color: "bg-gray-200" },
     { id: "pink", color: "bg-pink-200" },
@@ -11,6 +11,7 @@ export default function InviteThemeModal({ themes, selectedTheme, setSelectedThe
     { id: "yellow", color: "bg-yellow-200" },
     { id: "orange", color: "bg-orange-200" },
     { id: "red", color: "bg-red-200" },
+    { id: "rainbow", color: "bg-gradient-to-r from-pink-200 via-yellow-200 to-blue-200" },
   ];
   const fonts = [
     { id: "default", name: "Default", style: "font-sans" },
@@ -26,9 +27,27 @@ export default function InviteThemeModal({ themes, selectedTheme, setSelectedThe
   const displays = ["Блок", "Инлайн", "Флекс", "Грид"];
   const sizes = ["Маленький", "Средний", "Большой", "Очень большой"];
 
-  const [selectedColor, setSelectedColor] = useState(colors[0].id);
+  const [selectedColor, setSelectedColor] = useState("gray");
   const [showColorPicker, setShowColorPicker] = useState(false);
   const [showFontPicker, setShowFontPicker] = useState(false);
+
+  const colorPickerRef = useRef(null);
+  const fontPickerRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (colorPickerRef.current && !colorPickerRef.current.contains(event.target)) {
+        setShowColorPicker(false);
+      }
+      if (fontPickerRef.current && !fontPickerRef.current.contains(event.target)) {
+        setShowFontPicker(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
     <div
@@ -59,10 +78,10 @@ export default function InviteThemeModal({ themes, selectedTheme, setSelectedThe
           ))}
         </div>
         <div className="grid grid-cols-2 gap-4 mt-4">
-            <div className="relative inline-block">
+            <div className="relative inline-block" ref={colorPickerRef}>
             <button
             onClick={() => setShowColorPicker(!showColorPicker)}
-            className="mt-2 px-3 py-1 rounded bg-white/30 backdrop-blur-md text-sm shadow flex items-center gap-2"
+            className="mt-2 w-48 h-10 rounded bg-white/30 backdrop-blur-md text-sm shadow flex items-center gap-2 justify-center"
             >
             <div className={`w-4 h-4 rounded-full ${colors.find(c => c.id === selectedColor)?.color}`}></div>
             Выбрать цвет
@@ -87,9 +106,9 @@ export default function InviteThemeModal({ themes, selectedTheme, setSelectedThe
                 </div>
             )}
             </div>
-            <div className="relative inline-block">
+            <div className="relative inline-block" ref={fontPickerRef}>
               <button onClick={() => setShowFontPicker(!showFontPicker)} 
-                  className="mt-2 px-3 py-1 rounded bg-white/30 backdrop-blur-md text-sm shadow flex items-center gap-2">
+                  className="mt-2 w-48 h-10 rounded bg-white/30 backdrop-blur-md text-sm shadow flex items-center gap-2 justify-center">
                 <span className={`text-lg ${fonts.find(f => f.id === selectedFont)?.style}`}>Ag</span>
                 {fonts.find(f => f.id === selectedFont)?.name}
               </button>
@@ -101,6 +120,7 @@ export default function InviteThemeModal({ themes, selectedTheme, setSelectedThe
                       onClick={() => {
                         setSelectedFont(font.id);
                         setShowFontPicker(false);
+                        if (onFontChange) onFontChange(font.id);
                       }}
                       className={`cursor-pointer p-2 rounded border ${
                         selectedFont === font.id ? "border-blue-500" : "border-transparent"

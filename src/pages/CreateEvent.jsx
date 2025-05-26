@@ -8,7 +8,7 @@ import RegisterModal from "../components/RegisterModal";
 import CustomDropdown from "../components/CustomDropdown";
 import InviteThemeModal from "../components/InviteThemeModal";
 import { AuthContext } from "../context/AuthContext";
-import defaultEventImage from "../assets/default-event.jpg";
+import defaultEventImage from "../assets/invitation.png";
 
 export default function CreateEvent() {
   // Вычисляем завтрашнюю дату и время (14:00)
@@ -37,9 +37,11 @@ export default function CreateEvent() {
   const [capacity, setCapacity] = useState("");
   const [image, setImage] = useState(null);
   const [timezone, setTimezone] = useState(detectedTimeZone);
+  // Font for input fields
+  const [inputFont, setInputFont] = useState('font-sans');
 
   // Canvas color state and options
-  const [canvasColor, setCanvasColor] = useState("bg-white");
+  const [canvasColor, setCanvasColor] = useState("bg-gray-200");
   const colorOptions = [
     { id: "gray", color: "bg-gray-200" },
     { id: "pink", color: "bg-pink-200" },
@@ -49,7 +51,7 @@ export default function CreateEvent() {
     { id: "yellow", color: "bg-yellow-200" },
     { id: "orange", color: "bg-orange-200" },
     { id: "red", color: "bg-red-200" },
-    { id: "rainbow", color: "bg-gradient-to-r from-pink-500 via-yellow-500 to-blue-500" },
+    { id: "rainbow", color: "bg-gradient-to-r from-pink-200 via-yellow-200 to-blue-200" },
   ];
 
   // Theme modal states
@@ -322,7 +324,7 @@ export default function CreateEvent() {
             <div className="mb-2">
               <input
                 type="text"
-                className={`w-full rounded ${titleError ? 'border border-red-500' : ''} bg-white/30 backdrop-blur-md text-[#1A1A1A] placeholder:text-[#999999] px-3 py-2`}
+                className={`w-full rounded ${titleError ? 'border border-red-500' : ''} bg-white/30 backdrop-blur-md text-[#1A1A1A] placeholder:text-[#999999] px-3 py-2 ${inputFont}`}
                 placeholder="Название события"
                 value={title}
                 onChange={(e) => {
@@ -353,13 +355,13 @@ export default function CreateEvent() {
                   <div className="grid grid-cols-2 gap-4 mb-2">
                     <input
                       type="date"
-                      className="rounded bg-white/30 backdrop-blur-md px-3 py-2 text-[#1A1A1A]"
+                      className={`rounded bg-white/30 backdrop-blur-md px-3 py-2 text-[#1A1A1A] ${inputFont}`}
                       value={startDate}
                       onChange={(e) => setStartDate(e.target.value)}
                     />
                     <input
                       type="time"
-                      className="rounded bg-white/30 backdrop-blur-md px-3 py-2 text-[#1A1A1A]"
+                      className={`rounded bg-white/30 backdrop-blur-md px-3 py-2 text-[#1A1A1A] ${inputFont}`}
                       value={startTime}
                       onChange={(e) => setStartTime(e.target.value)}
                     />
@@ -368,13 +370,13 @@ export default function CreateEvent() {
                   <div className="grid grid-cols-2 gap-4 mb-2">
                     <input
                       type="date"
-                      className="rounded bg-white/30 backdrop-blur-md px-3 py-2 text-[#1A1A1A]"
+                      className={`rounded bg-white/30 backdrop-blur-md px-3 py-2 text-[#1A1A1A] ${inputFont}`}
                       value={endDate}
                       onChange={(e) => setEndDate(e.target.value)}
                     />
                     <input
                       type="time"
-                      className="rounded bg-white/30 backdrop-blur-md px-3 py-2 text-[#1A1A1A]"
+                      className={`rounded bg-white/30 backdrop-blur-md px-3 py-2 text-[#1A1A1A] ${inputFont}`}
                       value={endTime}
                       onChange={(e) => setEndTime(e.target.value)}
                     />
@@ -403,7 +405,7 @@ export default function CreateEvent() {
               <div className="relative" ref={suggestBoxRef}>
                 <input
                   type="text"
-                  className={`w-full rounded ${locationError ? 'border border-red-500' : ''} bg-white/30 backdrop-blur-md text-[#1A1A1A] placeholder:text-[#999999] px-3 py-2`}
+                  className={`w-full rounded ${locationError ? 'border border-red-500' : ''} bg-white/30 backdrop-blur-md text-[#1A1A1A] placeholder:text-[#999999] px-3 py-2 ${inputFont}`}
                   placeholder="Офлайн место или ссылка для онлайн"
                   value={location}
                   onChange={(e) => {
@@ -433,7 +435,7 @@ export default function CreateEvent() {
             {/* Описание */}
             <div>
               <textarea
-                className="w-full rounded bg-white/30 backdrop-blur-md text-[#1A1A1A] placeholder:text-[#999999] px-3 py-2"
+                className={`w-full rounded bg-white/30 backdrop-blur-md text-[#1A1A1A] placeholder:text-[#999999] px-3 py-2 ${inputFont}`}
                 placeholder="Дополнительная информация"
                 rows={3}
                 value={description}
@@ -447,7 +449,7 @@ export default function CreateEvent() {
               <div className="flex items-center justify-between">
                 <label className="block text-sm mb-1">Билеты</label>
                 <select
-                  className="rounded px-2 py-1 bg-white/30 backdrop-blur-md text-[#1A1A1A] placeholder:text-[#999999]"
+                  className={`rounded px-2 py-1 bg-white/30 backdrop-blur-md text-[#1A1A1A] placeholder:text-[#999999] ${inputFont}`}
                   value={tickets}
                   onChange={(e) => setTickets(e.target.value)}
                 >
@@ -477,7 +479,7 @@ export default function CreateEvent() {
                 <label className="block text-sm mb-1">Вместимость</label>
                 <input
                   type="text"
-                  className="w-24 rounded bg-white/30 backdrop-blur-md text-[#1A1A1A] placeholder:text-[#999999] px-3 py-1"
+                  className={`w-24 rounded bg-white/30 backdrop-blur-md text-[#1A1A1A] placeholder:text-[#999999] px-3 py-1 ${inputFont}`}
                   placeholder="Без ограничения"
                   value={capacity}
                   onChange={(e) => setCapacity(e.target.value)}
@@ -505,6 +507,20 @@ export default function CreateEvent() {
           onClose={() => setShowThemeModal(false)}
           onColorChange={(color) => setCanvasColor(color)}
           colorOptions={colorOptions}
+          onFontChange={(fontId) => {
+            const fontStyles = [
+              { id: "default", style: "font-sans" },
+              { id: "museo", style: "font-serif" },
+              { id: "factoria", style: "font-mono" },
+              { id: "garamond", style: "font-serif" },
+              { id: "roc", style: "font-serif" },
+              { id: "nunito", style: "font-sans" },
+              { id: "pearl", style: "font-sans" },
+              { id: "departure", style: "font-mono" },
+            ];
+            const selectedFont = fontStyles.find(f => f.id === fontId);
+            if (selectedFont) setInputFont(selectedFont.style);
+          }}
         />
       )}
     </div>

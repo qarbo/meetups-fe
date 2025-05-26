@@ -13,7 +13,7 @@ export async function apiFetch(input, init = {}) {
     },
   });
 
-  if (response.status === 401) {
+  if (response.status === 401 || response.status === 404) {
     localStorage.removeItem("token");          
     window.location.replace("/");
     return;

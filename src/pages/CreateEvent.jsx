@@ -1,4 +1,6 @@
 import React, { useEffect, useState, useContext, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import { apiFetch } from "../api";
 import { FaUpload } from "react-icons/fa";
 import "../styles/emojiBackground.css";
 
@@ -36,6 +38,7 @@ export default function CreateEvent() {
   const suggestBoxRef = useRef(null);
 
   const { isAuthenticated } = useContext(AuthContext);
+  const navigate = useNavigate();
   const [forceShowModal, setForceShowModal] = useState(false);
 
   const commonTimeZones = [
@@ -113,26 +116,63 @@ export default function CreateEvent() {
     }
   }, [isAuthenticated]);
 
-  const handleSubmit = (e) => {
+  const uploadImageToServer = async (file) => {
+    const formData = new FormData();
+    formData.append("image", file);
+    const response = await fetch("http://localhost:8000/images/upload/", {
+      method: "POST",
+      body: formData,
+    });
+    if (!response.ok) {
+      throw new Error("Image upload failed");
+    }
+    const data = await response.json();
+    return data;
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    let imageUrl = null;
+    let imageId = null;
+    if (image) {
+      try {
+        const uploadResult = await uploadImageToServer(image);
+        imageUrl = uploadResult.url;
+        imageId = uploadResult.id;
+      } catch (error) {
+        console.error("Upload error:", error);
+      }
+    }
+    // Combine date and time into ISO strings
+    const start_datetime = `${startDate}T${startTime}`;
+    const end_datetime = `${endDate}T${endTime}`;
     const newEvent = {
-      calendarType,
-      visibility,
       title,
-      startDate,
-      startTime,
-      endDate,
-      endTime,
-      location,
       description,
-      tickets,
-      requireApproval,
-      capacity,
-      image,
-      timezone,
+      visibility,
+      start_datetime,
+      end_datetime,
+      online_link: location,
+      ticket_type: tickets,
+      requires_confirmation: requireApproval,
+      capacity: capacity ? parseInt(capacity, 10) : null,
+      cover_image_id: imageId,
+      cover_image_url: imageUrl,
     };
-    console.log("Создано мероприятие:", newEvent);
-    // Здесь можно добавить логику отправки на сервер
+    try {
+      const res = await apiFetch("/events/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newEvent),
+      });
+      if (!res.ok) {
+        throw new Error("Event creation failed");
+      }
+      const created = await res.json();
+      navigate(`/events/${created.id}`);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   // Handler for location input change with Yandex suggest
@@ -179,14 +219,6 @@ export default function CreateEvent() {
           <div className="w-full max-w-md flex flex-col gap-4">
           {/* Верхняя панель с выбором календаря и публичности */}
           <div className="flex justify-between">
-            <select
-              className="rounded px-2 py-1 bg-white/30 backdrop-blur-md text-[#1A1A1A] placeholder:text-[#999999]"
-              value={calendarType}
-              onChange={(e) => setCalendarType(e.target.value)}
-            >
-              <option value="personal">Личный календарь</option>
-              <option value="work">Рабочий календарь</option>
-            </select>
 
             <select
               className="rounded px-2 py-1 bg-white/30 backdrop-blur-md text-[#1A1A1A] placeholder:text-[#999999]"

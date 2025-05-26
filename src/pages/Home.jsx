@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 // Функции-помощники для сравнения дат
@@ -34,68 +34,17 @@ function isThisWeekend(dateString) {
 
 export default function Home() {
   // Здесь в каждом объекте есть поле category и дата в формате YYYY-MM-DD
-  const [events] = useState([
-    {
-      id: 1,
-      title: "Семинар Web-дизайна",
-      date: "2025-05-04", // год-месяц-день
-      location: "м. Охотный Ряд",
-      image: "https://cdnwebkul.webkul.com/wp-content/uploads/2023/03/Poster-1024x1024.jpeg",
-      day: "25",
-      month: "Сен",
-      category: "activism",
-    },
-    {
-      id: 2,
-      title: "Мастер-класс фотографии",
-      date: "2025-05-04",
-      location: "Вавилова 19",
-      image: "https://www.masterclass.com/course-images/attachments/12prcdxk3l15fr6dolnnls25n9ga",
-      day: "23",
-      month: "Авг",
-      category: "hobbies",
-    },
-    {
-      id: 3,
-      title: "Поход по парку",
-      date: "2025-05-10",
-      location: "м. Авиамоторная",
-      image: "https://nordski.ru/images/blog/kak-splanirovat-byudzhetnyy-pokhod-1.jpg",
-      day: "4",
-      month: "Мая",
-      category: "outdoors",
-    },
-    {
-      id: 4,
-      title: "Встреча стартаперов",
-      date: "2025-05-12",
-      location: "м. Пушкинская",
-      image: "https://elements-resized.envatousercontent.com/elements-video-cover-images/23bb2eaf-6c03-4377-907c-d096d99db6b5/video_preview/video_preview_0000.jpg?w=500&cf_fit=cover&q=85&format=auto&s=35e7e0bbdd375c22973e0cefb9d51f804bfcdbf757e44e36b1ccce276d6037f0",
-      day: "12",
-      month: "Мая",
-      category: "activism",
-    },
-    {
-      id: 5,
-      title: "Концерт группы",
-      date: "2025-05-14",
-      location: "м. Новокузнецкая",
-      image: "https://images.seattletimes.com/wp-content/uploads/2023/11/KISS-flames-at-Climate-Pledge-Arena-110-by-david-conger.jpg?d=780x520",
-      day: "14",
-      month: "Мая",
-      category: "hobbies",
-    },
-    {
-      id: 6,
-      title: "Фестиваль еды",
-      date: "2025-05-16",
-      location: "Центральный парк",
-      image: "https://i0.wp.com/newjerseyisntboring.com/wp-content/uploads/2025/03/img20240912_008.jpg?resize=800%2C445&ssl=1",
-      day: "16",
-      month: "Мая",
-      category: "outdoors",
-    }
-  ]);
+  const [events, setEvents] = useState([]);
+
+  useEffect(() => {
+    fetch("http://localhost:8000/events/")
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to load events");
+        return res.json();
+      })
+      .then((data) => setEvents(data))
+      .catch(console.error);
+  }, []);
 
   // Получаем текущую дату для отображения
   const today = new Date();
@@ -117,7 +66,7 @@ export default function Home() {
               return (
                 <Link
                   key={event.id}
-                  to={`/event/${event.id}`}
+                  to={`/events/${event.id}`}
                   className="block"
                 >
                   <div className="bg-white border rounded-lg p-4 flex items-start justify-between gap-4 shadow-sm hover:shadow transition">
@@ -126,7 +75,7 @@ export default function Home() {
                       <h2 className="text-lg font-semibold mb-1 truncate">{event.title}</h2>
                       <div className="flex items-center gap-2 text-sm text-gray-500 mb-1">
                         <span role="img" aria-label="Организатор">👤</span>
-                        <span>Организатор: Имя Фамилия</span>
+                        <span>Организатор: {event.organizer.name}</span>
                       </div>
                       <div className="flex items-center gap-2 text-sm text-gray-500">
                         <span role="img" aria-label="Локация">📍</span>
@@ -140,7 +89,7 @@ export default function Home() {
                       </div>
                     </div>
                     <img
-                      src={event.image}
+                      src={event.cover_image_url}
                       alt={event.title}
                       className="w-24 h-24 rounded-lg object-cover flex-shrink-0"
                     />

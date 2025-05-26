@@ -9,7 +9,7 @@ import Profile from "./pages/Profile";
 import Calendar from "./pages/Calendar";
 import Chat from "./pages/Chat";
 import CreateEvent from "./pages/CreateEvent";
-import EventDetails from "./pages/EventDetails";
+import EventOverview from "./pages/EventOverview";
 import LandingPage from "./pages/LandingPage";
 import RegisterModal from "./components/RegisterModal";
 import LoginModal from "./components/LoginModal";
@@ -82,7 +82,7 @@ export default function App() {
                 <FaCalendarAlt />
                 <span className="hidden md:inline">Календарь</span>
               </Link>
-              <Link
+              {/* <Link
                 to="/chat"
                 className={`text-sm flex items-center gap-2 transition-colors duration-200 ${
                   currentPath === "/chat" ? "text-black font-semibold" : "text-gray-500 hover:text-black"
@@ -90,7 +90,7 @@ export default function App() {
               >
                 <FaComments />
                 <span className="hidden md:inline">Чаты</span>
-              </Link>
+              </Link> */}
             </nav>
 
             {/* Auth buttons with icons and labels on md and up */}
@@ -137,12 +137,13 @@ export default function App() {
             <Routes>
               <>
                 <Route path="/" element={<LandingPage />} />
-                <Route path="/discover" element={<Home />} />ы
+                <Route path="/discover" element={<Home />} />
                 <Route path="/calendar" element={<Calendar />} />
                 <Route path="/chat" element={<Chat />} />
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/create" element={<CreateEvent />} />
-                <Route path="/event/:id" element={<EventDetails />} />
+                <Route path="/events/:id/edit" element={<CreateEvent />} />
+                <Route path="/events/:id" element={<EventOverview />} />
               </>
             </Routes>
           </main>

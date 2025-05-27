@@ -180,7 +180,7 @@ export default function InviteThemeModal({ themes, selectedTheme, setSelectedThe
             </button>
             {selectedTheme === "emoji" && showEmojiPicker && (
               <div className="absolute z-50 bottom-full mb-2 bg-white rounded-lg shadow-md p-2 grid grid-cols-6 gap-2 min-w-[20rem] max-w-[20rem]">
-                {["😀", "🎉", "🚀", "🌈", "🔥", "💡"].map((emoji) => (
+                {["😀", "🎉", "🚀", "🌈", "🔥", "💡", "🇷🇺", "🍕", "🍺", "🍸", "🫦", "♥️", "🏐", "🎾", "🏀", "⚽️", "🎱", "🌴"].map((emoji) => (
                   <div
                     key={emoji}
                     onClick={() => {

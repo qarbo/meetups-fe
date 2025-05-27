@@ -1,3 +1,10 @@
+import '@fontsource/roboto'; 
+import '@fontsource/open-sans'; 
+import '@fontsource/pt-sans'; 
+import '@fontsource/montserrat'; 
+import '@fontsource/noto-sans'; 
+import '@fontsource/lato';
+
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';

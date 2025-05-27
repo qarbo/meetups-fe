@@ -15,3 +15,4 @@ code {
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Roboto&family=Open+Sans&family=PT+Sans&family=Montserrat&family=Noto+Sans&family=Lato&display=swap&subset=cyrillic');

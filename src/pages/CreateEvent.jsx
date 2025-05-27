@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { apiFetch } from "../api";
 import { FaTheRedYeti, FaUpload } from "react-icons/fa";
 import "../styles/emojiBackground.css";
+import useCanvasAnimation from "../hooks/useCanvasAnimation";
 
 import RegisterModal from "../components/RegisterModal";
 import CustomDropdown from "../components/CustomDropdown";
@@ -11,7 +12,15 @@ import { AnimatePresence } from "framer-motion";
 import { AuthContext } from "../context/AuthContext";
 import defaultEventImage from "../assets/invitation.png";
 
+function loadFromLocalStorage(key, setter, parseJson = false) {
+  const value = localStorage.getItem(key);
+  if (value) setter(parseJson ? JSON.parse(value) : value);
+}
+
 export default function CreateEvent() {
+  // Состояния для выбранных эмодзи и паттерна (инициализация выше)
+  const [selectedEmoji, setSelectedEmoji] = useState("😀");
+  const [selectedPattern, setSelectedPattern] = useState("pattern1");
   // Вычисляем завтрашнюю дату и время (14:00)
   const now = new Date();
   const tomorrow = new Date(now);
@@ -44,6 +53,15 @@ export default function CreateEvent() {
   // Canvas color state and options
   const [canvasColor, setCanvasColor] = useState("gray");
   const [colorScheme, setColorScheme] = useState("light");
+  // Load colorScheme, canvasColor, inputFont, selectedTheme, selectedEmoji, and selectedPattern from localStorage on mount
+  useEffect(() => {
+    loadFromLocalStorage("colorScheme", setColorScheme);
+    loadFromLocalStorage("canvasColor", setCanvasColor);
+    loadFromLocalStorage("inputFont", setInputFont);
+    loadFromLocalStorage("selectedTheme", setSelectedTheme, true);
+    loadFromLocalStorage("selectedEmoji", setSelectedEmoji);
+    loadFromLocalStorage("selectedPattern", setSelectedPattern);
+  }, []);
   const colorOptions = [
     { id: "gray", color: "bg-gray-200", darkColor: "bg-gray-900"},
     { id: "pink", color: "bg-pink-200", darkColor: "bg-pink-900" },
@@ -90,58 +108,8 @@ export default function CreateEvent() {
     "Australia/Sydney",
   ];
 
-  useEffect(() => {
-    const canvas = document.getElementById("canvas");
-    const ctx = canvas.getContext("2d");
-    const dpr = window.devicePixelRatio || 1;
-  
-    const resize = () => {
-      canvas.width = window.innerWidth * dpr;
-      canvas.height = window.innerHeight * dpr;
-      canvas.style.width = "100vw";
-      canvas.style.height = "100vh";
-      ctx.scale(dpr, dpr);
-    };
-    resize();
-    window.addEventListener("resize", resize);
-  
-    const emojis = ["⚽️", "🥅", "🔥", "🚀"];
-    const particles = new Array(30).fill(0).map(() => ({
-      emoji: emojis[Math.floor(Math.random() * emojis.length)],
-      x: Math.random() * window.innerWidth,
-      y: Math.random() * window.innerHeight,
-      speedY: 0.3 + Math.random() * 0.7,
-      speedX: (Math.random() - 0.5) * 0.5,
-      size: 20 + Math.random() * 20,
-    }));
-  
-    let animationId;
-    const animate = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-  
-      for (let p of particles) {
-        p.y += p.speedY;
-        p.x += p.speedX;
-  
-        if (p.y > window.innerHeight) {
-          p.y = -50;
-          p.x = Math.random() * window.innerWidth;
-        }
-  
-        ctx.font = `${p.size}px serif`;
-        ctx.fillText(p.emoji, p.x, p.y);
-      }
-  
-      animationId = requestAnimationFrame(animate);
-    };
-  
-    animate();
-  
-    return () => {
-      cancelAnimationFrame(animationId);
-      window.removeEventListener("resize", resize);
-    };
-  }, []);
+// Управление анимацией canvas
+useCanvasAnimation(selectedTheme, selectedEmoji);
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -492,6 +460,7 @@ export default function CreateEvent() {
             </div>
 
             {/* Кнопка создания */}
+            <div className="h-4"></div>
             <button
               type="submit"
               className="w-full bg-white text-[#1A1A1A] py-2 rounded shadow-sm hover:bg-[#FFC8D4]"
@@ -508,17 +477,20 @@ export default function CreateEvent() {
           <InviteThemeModal
             themes={moodThemes}
             selectedTheme={selectedTheme}
+            selectedColorScheme={colorScheme}
             setSelectedTheme={setSelectedTheme}
             onClose={() => setShowThemeModal(false)}
             onColorChange={(colorId) => {
               const selectedOption = colorOptions.find(c => c.id === colorId);
-              console.log("SELECTED OPTION")
-              console.log(selectedOption)
               if (selectedOption) {
-                setCanvasColor(colorScheme === "light" ? selectedOption.id : selectedOption.id);
+                setCanvasColor(colorId);
+                localStorage.setItem("canvasColor", colorId);
               }
             }}
-            onThemeChange={(newColorScheme) => setColorScheme(newColorScheme)}
+            onThemeChange={(newColorScheme) => {
+              setColorScheme(newColorScheme);
+              localStorage.setItem("colorScheme", newColorScheme);
+            }}
             colorOptions={colorOptions}
             onFontChange={(fontId) => {
               const fontStyles = [
@@ -532,7 +504,20 @@ export default function CreateEvent() {
                 { id: "departure", style: "font-mono" },
               ];
               const selectedFont = fontStyles.find(f => f.id === fontId);
-              if (selectedFont) setInputFont(selectedFont.style);
+              if (selectedFont) {
+                setInputFont(selectedFont.style);
+                localStorage.setItem("inputFont", selectedFont.style);
+              }
+            }}
+            selectedEmoji={selectedEmoji}
+            setSelectedEmoji={(emoji) => {
+              setSelectedEmoji(emoji);
+              localStorage.setItem("selectedEmoji", emoji);
+            }}
+            selectedPattern={selectedPattern}
+            setSelectedPattern={(pattern) => {
+              setSelectedPattern(pattern);
+              localStorage.setItem("selectedPattern", pattern);
             }}
           />
         )}

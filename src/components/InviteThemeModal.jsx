@@ -85,7 +85,7 @@ export default function InviteThemeModal({ themes, selectedTheme, setSelectedThe
             <div
               key={theme.id}
               onClick={() => setSelectedTheme(theme.id)}
-              className={`cursor-pointer rounded-lg overflow-hidden border-2 max-w-[120px] ${
+              className={`cursor-pointer rounded-lg overflow-hidden border-2 max-w-[100px] ${
                 selectedTheme === theme.id ? "border-blue-500" : "border-transparent"
               }`}
             >

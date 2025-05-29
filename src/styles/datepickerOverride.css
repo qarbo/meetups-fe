@@ -1,14 +1,4 @@
 .react-datepicker-popper {
-    z-index: 2147483647 !important;
-    position: fixed !important;
+    top: 0;
+    overflow: visible;
 }
-
-.react-datepicker__tab-loop {
-    position: absolute !important;
-    width: 0 !important;
-    height: 0 !important;
-    overflow: hidden !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    border: none !important;
-  }

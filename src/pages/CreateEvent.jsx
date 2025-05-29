@@ -1,13 +1,14 @@
 import React, { useEffect, useState, useContext, useRef } from "react";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-import { ru } from "date-fns/locale";
+import { LocalizationProvider, DateTimePicker } from '@mui/x-date-pickers';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import ruLocale from 'date-fns/locale/ru';
+import TextField from '@mui/material/TextField';
 import { useNavigate } from "react-router-dom";
 import { apiFetch } from "../api";
 import { FaTheRedYeti, FaUpload } from "react-icons/fa";
 import "../styles/emojiBackground.css";
-import "react-datepicker/dist/react-datepicker.css";
-import "../styles/datepickerOverride.css"; // импорт кастомного CSS
+// import "react-datepicker/dist/react-datepicker.css";
+// import "../styles/datepickerOverride.css"; // импорт кастомного CSS
 import CanvasTheme from "../components/CanvasTheme";
 
 import RegisterModal from "../components/RegisterModal";
@@ -45,6 +46,9 @@ export default function CreateEvent() {
   const [startTime, setStartTime] = useState(formattedTime);
   const [endDate, setEndDate] = useState(formattedDate);
   const [endTime, setEndTime] = useState("15:00");
+  // MUI DateTimePicker states
+  const [startDateTime, setStartDateTime] = useState(new Date(`${startDate}T${startTime}`));
+  const [endDateTime, setEndDateTime] = useState(new Date(`${endDate}T${endTime}`));
   const [location, setLocation] = useState("");
   const [description, setDescription] = useState("");
   const [tickets, setTickets] = useState("free");
@@ -155,9 +159,9 @@ export default function CreateEvent() {
         console.error("Upload error:", error);
       }
     }
-    // Combine date and time into ISO strings
-    const start_datetime = `${startDate}T${startTime}`;
-    const end_datetime = `${endDate}T${endTime}`;
+    // Combine date and time into ISO strings (MUI), but remove timezone info (send as "YYYY-MM-DDTHH:MM:SS")
+    const start_datetime = startDateTime.toISOString().split(".")[0];
+    const end_datetime = endDateTime.toISOString().split(".")[0];
     const themeSettings = {
       canvasColor,
       colorScheme,
@@ -243,7 +247,7 @@ export default function CreateEvent() {
               <img
                 src={image ? URL.createObjectURL(image) : defaultEventImage}
                 alt="preview"
-                className="w-full aspect-square object-cover rounded shadow-sm lg:w-full sm:w-3/5"
+                className="w-full aspect-square object-cover rounded shadow-sm"
               />
               <label className="absolute bottom-2 right-2 cursor-pointer bg-[#FFD5DC] text-[#1A1A1A] p-2 rounded-full hover:bg-[#E0E0E0]">
                 <FaUpload />
@@ -267,7 +271,7 @@ export default function CreateEvent() {
             <button
               type="button"
               onClick={() => setShowThemeModal(true)}
-              className="bg-white/40 backdrop-blur-md text-[#1A1A1A] px-3 py-2 rounded hover:bg-white/70"
+              className={`bg-white/40 backdrop-blur-md ${colorScheme === "light" ? "text-black" : "text-white"} px-3 py-2 rounded hover:bg-white/70`}
             >
               Выбрать тему приглашения
             </button>
@@ -292,6 +296,7 @@ export default function CreateEvent() {
               ]}
               selected={visibility}
               setSelected={setVisibility}
+              colorScheme={colorScheme}
               align='left'
             />
           </div>
@@ -301,8 +306,8 @@ export default function CreateEvent() {
               <input
                 type="text"
                 autoFocus
-                className={`bg-white/0 w-full rounded-none ${titleError ? 'border-red-500' : ''} ${colorScheme === "light" ? "text-[#1A1A1A]" : "text-white"} placeholder:text-[#999999] px-0 py-1 ${inputFont} text-xl focus:outline-none`}
-                placeholder="Название события"
+                className={`bg-white/0 w-full rounded-none ${titleError ? 'border-red-500' : ''} ${colorScheme === "light" ? "text-[#1A1A1A]" : "text-white placeholder:text-[#CCCCCC]"} placeholder:text-[#999999] px-0 py-1 ${inputFont} text-xl focus:outline-none`}
+                placeholder="Введите название события"
                 value={title}
                 onChange={(e) => {
                   setTitle(e.target.value);
@@ -311,95 +316,27 @@ export default function CreateEvent() {
               />
             </div>
 
-            {/* Дата и время начала и окончания */}
+            {/* Дата и время начала и окончания (MUI) */}
             <div className="mb-2">
               <div className="flex flex-col lg:flex-row rounded bg-white/30 backdrop-blur-md shadow space-y-2 lg:space-y-0">
-                {/* Left labels */}
-                {/* <div className="flex flex-col justify-center items-center px-4 py-3 space-y-8 border-r border-[#E5E5E5] min-w-[60px]">
-                  <div className="flex items-center space-x-2">
-                    <div className="w-3 h-3 rounded-full bg-[#1A1A1A]"></div>
-                    <span className="text-sm text-gray-500">Start</span>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <div className="w-3 h-3 rounded-full bg-[#1A1A1A]"></div>
-                    <span className="text-sm text-gray-500">End</span>
-                  </div>
-                </div> */}
-
-                {/* Middle date/time inputs */}
-                <div className="flex flex-col justify-center px-3 py-2 space-y-1 w-full">
-                  {/* Start row */}
-                  <div className="flex flex-row flex-nowrap gap-4">
-                    <div className="flex flex-col justify-center w-32 px-4">
-                      <span className="text-sm font-medium">Начало</span>
-                    </div>
-                    <DatePicker
-                      portalId="root-portal"
-                      selected={startDate ? new Date(startDate) : null}
-                      onChange={(date) => setStartDate(date ? date.toISOString().split("T")[0] : "")}
-                      dateFormat="dd.MM.yyyy"
-                      locale={ru}
-                      className={`rounded bg-white/30 backdrop-blur-md px-5 w-32 py-1 ${colorScheme === "light" ? "text-[#1A1A1A]" : "text-white"} ${inputFont}`}
-                      placeholderText="дд.мм.гггг"
+                <div className="flex flex-col justify-center px-3 py-2 space-y-3 w-full">
+                  <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={ruLocale}>
+                    <DateTimePicker
+                      label="Начало"
+                      value={startDateTime}
+                      onChange={(newValue) => setStartDateTime(newValue)}
+                      ampm={false}
+                      renderInput={(params) => <TextField {...params} fullWidth />}
                     />
-                    <DatePicker
-                      portalId="root-portal"
-                      selected={startTime ? new Date(`1970-01-01T${startTime}`) : null}
-                      onChange={(time) => setStartTime(time ? time.toTimeString().slice(0,5) : "")}
-                      showTimeSelect
-                      showTimeSelectOnly
-                      timeIntervals={15}
-                      timeCaption="Время"
-                      dateFormat="HH:mm"
-                      locale={ru}
-                      className={`rounded bg-white/30 backdrop-blur-md w-32 px-5 py-1 ${colorScheme === "light" ? "text-[#1A1A1A]" : "text-white"} ${inputFont}`}
-                      placeholderText="чч:мм"
+                    <DateTimePicker
+                      label="Окончание"
+                      value={endDateTime}
+                      onChange={(newValue) => setEndDateTime(newValue)}
+                      ampm={false}
+                      renderInput={(params) => <TextField {...params} fullWidth />}
                     />
-                  </div>
-                  {/* End row */}
-                  <div className="flex flex-row flex-nowrap gap-4">
-                    <div className="flex flex-col w-32 justify-center px-4">
-                      <span className="text-sm font-medium">Окончание</span>
-                    </div>
-                    <DatePicker
-                      portalId="root-portal"
-                      selected={endDate ? new Date(endDate) : null}
-                      onChange={(date) => setEndDate(date ? date.toISOString().split("T")[0] : "")}
-                      dateFormat="dd.MM.yyyy"
-                      locale={ru}
-                      className={`rounded bg-white/30 backdrop-blur-md w-32 px-5 py-1 ${colorScheme === "light" ? "text-[#1A1A1A]" : "text-white"} ${inputFont}`}
-                      placeholderText="дд.мм.гггг"
-                    />
-                    <DatePicker
-                      portalId="root-portal"
-                      selected={endTime ? new Date(`1970-01-01T${endTime}`) : null}
-                      onChange={(time) => setEndTime(time ? time.toTimeString().slice(0,5) : "")}
-                      showTimeSelect
-                      showTimeSelectOnly
-                      timeIntervals={15}
-                      timeCaption="Время"
-                      dateFormat="HH:mm"
-                      locale={ru}
-                      className={`rounded bg-white/30 backdrop-blur-md w-32 px-5 py-1 ${colorScheme === "light" ? "text-[#1A1A1A]" : "text-white"} ${inputFont}`}
-                      placeholderText="чч:мм"
-                    />
-                  </div>
+                  </LocalizationProvider>
                 </div>
-
-                {/* Right timezone selector */}
-                {/* <div className="flex flex-col justify-center items-center px-4 py-3 border-t lg:border-t-0 lg:border-l border-[#E5E5E5] w-full lg:w-auto text-sm text-gray-500">
-                  <select
-                    className="bg-[#FFD5DC] text-[#1A1A1A] rounded px-2 py-1 ring-1 ring-[#E5E5E5]"
-                    value={timezone}
-                    onChange={(e) => setTimezone(e.target.value)}
-                  >
-                    {commonTimeZones.map((tz) => (
-                      <option key={tz} value={tz}>
-                        {tz}
-                      </option>
-                    ))}
-                  </select>
-                </div> */}
               </div>
             </div>
 
@@ -408,7 +345,7 @@ export default function CreateEvent() {
               <div className="relative" ref={suggestBoxRef}>
                 <input
                   type="text"
-                  className={`w-full rounded ${locationError ? 'border border-red-500' : ''} bg-white/30 backdrop-blur-md ${colorScheme === "light" ? "text-[#1A1A1A]" : "text-white"} placeholder:text-[#999999] px-3 py-2 ${inputFont}`}
+                  className={`w-full rounded ${locationError ? 'border border-red-500' : ''} bg-white/30 backdrop-blur-md ${colorScheme === "light" ? "text-[#1A1A1A] placeholder:text-[#999999]" : "text-white placeholder:text-[#CCCCCC]"}  px-3 py-2 ${inputFont}`}
                   placeholder="Офлайн место или ссылка для онлайн"
                   value={location}
                   onChange={(e) => {
@@ -438,7 +375,7 @@ export default function CreateEvent() {
             {/* Описание */}
             <div>
               <textarea
-                className={`w-full rounded bg-white/30 backdrop-blur-md ${colorScheme === "light" ? "text-[#1A1A1A]" : "text-white"} placeholder:text-[#999999] px-3 py-2 ${inputFont}`}
+                className={`w-full rounded bg-white/30 backdrop-blur-md ${colorScheme === "light" ? "text-[#1A1A1A]" : "text-white placeholder:text-[#CCCCCC]"} placeholder:text-[#999999] px-3 py-2 ${inputFont}`}
                 placeholder="Дополнительная информация"
                 rows={3}
                 value={description}
@@ -482,7 +419,7 @@ export default function CreateEvent() {
                 <label className={`block text-sm mb-1 ${colorScheme === "light" ? "text-[#1A1A1A]" : "text-white"}`}>Вместимость</label>
                 <input
                   type="text"
-                  className={`w-24 rounded bg-white/30 backdrop-blur-md ${colorScheme === "light" ? "text-[#1A1A1A]" : "text-white"} placeholder:text-[#999999] px-3 py-1 ${inputFont}`}
+                  className={`w-24 rounded bg-white/30 backdrop-blur-md ${colorScheme === "light" ? "text-[#1A1A1A]" : "text-white placeholder:text-[#CCCCCC]"} placeholder:text-[#999999] px-3 py-1 ${inputFont}`}
                   placeholder="Без ограничения"
                   value={capacity}
                   onChange={(e) => setCapacity(e.target.value)}

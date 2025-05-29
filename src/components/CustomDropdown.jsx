@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 
-export default function CustomDropdown({ options, selected, setSelected, align = 'right' }) {
+export default function CustomDropdown({ options, selected, setSelected, colorScheme, align = 'right' }) {
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   return (
     <div className="relative inline-block text-left">
       <button
         type="button"
-        className="bg-white/20 inline-flex justify-center w-full rounded-md backdrop-blur-md shadow-sm px-4 py-2 text-sm font-medium text-black hover:bg-white/50 focus:outline-none"
+        className={`bg-white/20 inline-flex justify-center w-full rounded-md backdrop-blur-md shadow-sm px-4 py-2 text-sm font-medium ${colorScheme === "light" ? "text-black" : "text-white"} hover:bg-white/50 focus:outline-none`}
         onClick={() => setDropdownOpen(!dropdownOpen)}
       >
         {options.find(opt => opt.value === selected)?.label || "Select..."}

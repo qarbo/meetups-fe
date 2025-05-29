@@ -3,6 +3,7 @@ import { apiFetch } from "../api";
 import { useParams, Link } from "react-router-dom";
 import EventCard from "../components/EventCard";
 import CanvasTheme from "../components/CanvasTheme";
+import { formatEventDateTime } from '../utils/dateUtils';
 
 export default function EventOverview() {
   const { id } = useParams();
@@ -40,8 +41,7 @@ export default function EventOverview() {
           <div>
             <h2 className="text-xl font-semibold">When & Where</h2>
             <p className="mt-2">
-              {new Date(event.start_datetime).toLocaleString()} –{" "}
-              {new Date(event.end_datetime).toLocaleString()}
+              {formatEventDateTime(event.start_datetime, event.end_datetime)}
             </p>
             <p className="mt-2">
               {event.online_link || <span className="italic text-gray-500">Location missing</span>}

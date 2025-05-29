@@ -1,5 +1,6 @@
 import React, { useRef, useEffect, useState } from "react";
 import CanvasTheme from "./CanvasTheme";
+import { formatEventDateTime } from "../utils/dateUtils";
 
 export default function EventCard({ event }) {
   const cardRef = useRef(null);
@@ -13,8 +14,11 @@ export default function EventCard({ event }) {
     }
   }, []);
 
+  const themeData = event.theme ? JSON.parse(event.theme) : {};
+  const textColorClass = themeData.colorScheme === "dark" ? "text-white" : "text-black";
+
   return (
-    <div ref={cardRef} className="max-w-80 bg-green-100 p-4 rounded-lg shadow-lg mx-auto relative overflow-hidden flex">
+    <div ref={cardRef} className={`max-w-80 bg-green-100 p-4 rounded-lg shadow-lg mx-auto relative overflow-hidden flex ${textColorClass}`}>
       <CanvasTheme
         selectedTheme={event.theme ? JSON.parse(event.theme).theme : null}
         selectedEmoji={event.theme ? JSON.parse(event.theme).emoji : null}
@@ -39,7 +43,7 @@ export default function EventCard({ event }) {
       <div className="relative z-10 ml-4 flex-1">
         <h2 className="text-s font-bold">{event.title}</h2>
         <p className="text-xs text-gray-500">
-          {new Date(event.start_datetime).toLocaleString()} – {new Date(event.end_datetime).toLocaleString()}
+          {formatEventDateTime(event.start_datetime, event.end_datetime)}
         </p>
         <p className="mt-2 text-xs">{event.description || "No description available"}</p>
         <div className="mt-4 flex space-x-2">

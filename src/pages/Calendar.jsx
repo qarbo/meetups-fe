@@ -47,7 +47,7 @@ export default function EventCalendar() {
                 }}
               />
               {popoverDate === formatted && (
-                <div className="absolute top-5 z-10 bg-white shadow-md border rounded p-2 text-sm w-48">
+                <div className="absolute top-5 z-10 bg-white shadow-md rounded p-2 text-sm w-48">
                   <p className="font-semibold mb-1">События:</p>
                   <ul className="space-y-1">
                     {exampleEvents[formatted].map((ev, idx) => (

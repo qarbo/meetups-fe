@@ -7,10 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { apiFetch } from "../api";
 import { FaTheRedYeti, FaUpload } from "react-icons/fa";
 import "../styles/emojiBackground.css";
-// import "react-datepicker/dist/react-datepicker.css";
-// import "../styles/datepickerOverride.css"; // импорт кастомного CSS
 import CanvasTheme from "../components/CanvasTheme";
-
 import RegisterModal from "../components/RegisterModal";
 import CustomDropdown from "../components/CustomDropdown";
 import InviteThemeModal from "../components/InviteThemeModal";
@@ -239,11 +236,11 @@ export default function CreateEvent() {
         <div className="max-w-5xl mx-auto rounded-xl p-1 flex flex-col lg:flex-row gap-6 items-start">
         {/* Левый столбец: изображение и выбор календаря */}
         <div className="w-full lg:w-1/2 flex justify-center">
-          <div className="w-full max-w-md flex flex-col gap-4">
+          <div className="w-full max-w-md flex flex-col gap-2">
 
           {/* Загрузка изображения */}
           <div>
-            <div className="relative w-full">
+            <div className="relative w-4/5 sm:w-full mx-auto">
               <img
                 src={image ? URL.createObjectURL(image) : defaultEventImage}
                 alt="preview"
@@ -264,23 +261,20 @@ export default function CreateEvent() {
               </label>
             </div>
           </div>
-          {/* Отступ снизу для мобильных устройств */}
-          <div className="lg:hidden"></div>
-          {/* Кнопка выбора темы приглашения (перемещено сюда) */}
-          <div className="mt-2 flex items-center">
+          <div className="mx-auto flex items-center">
             <button
               type="button"
               onClick={() => setShowThemeModal(true)}
-              className={`bg-white/40 backdrop-blur-md ${colorScheme === "light" ? "text-black" : "text-white"} px-3 py-2 rounded hover:bg-white/70`}
+              className={`bg-white/40 backdrop-blur-md ${colorScheme === "light" ? "text-black" : "text-white"} px-2 py-1 rounded hover:bg-white/70 text-sm`}
             >
               Выбрать тему приглашения
             </button>
-            {selectedTheme && (
+            {/* {selectedTheme && (
               <span className="ml-3 text-sm flex items-center">
                 <img src={selectedTheme.image} alt={selectedTheme.name} className="w-8 h-8 rounded mr-2" />
                 {selectedTheme.name}
               </span>
-            )}
+            )} */}
           </div>
           </div>
         </div>
@@ -306,7 +300,7 @@ export default function CreateEvent() {
               <input
                 type="text"
                 autoFocus
-                className={`bg-white/0 w-full rounded-none ${titleError ? 'border-red-500' : ''} ${colorScheme === "light" ? "text-[#1A1A1A]" : "text-white placeholder:text-[#CCCCCC]"} placeholder:text-[#999999] px-0 py-1 ${inputFont} text-xl focus:outline-none`}
+                className={`w-full rounded ${locationError ? 'border border-red-500' : ''} bg-white/30 backdrop-blur-md ${colorScheme === "light" ? "text-[#1A1A1A] placeholder:text-[#999999]" : "text-white placeholder:text-[#CCCCCC]"}  px-3 py-2 ${inputFont}`}
                 placeholder="Введите название события"
                 value={title}
                 onChange={(e) => {
@@ -324,7 +318,15 @@ export default function CreateEvent() {
                     <DateTimePicker
                       label="Начало"
                       value={startDateTime}
-                      onChange={(newValue) => setStartDateTime(newValue)}
+                      onChange={(newValue) => {
+                        setStartDateTime(newValue);
+                        setEndDateTime((prevEnd) => {
+                          if (!prevEnd) return newValue;
+                          const updatedEnd = new Date(newValue);
+                          updatedEnd.setHours(prevEnd.getHours(), prevEnd.getMinutes(), prevEnd.getSeconds(), prevEnd.getMilliseconds());
+                          return updatedEnd;
+                        });
+                      }}
                       ampm={false}
                       renderInput={(params) => <TextField {...params} fullWidth />}
                     />
@@ -384,7 +386,7 @@ export default function CreateEvent() {
             </div>
 
             {/* Опции события */}
-            <div className="border-t pt-4 space-y-4 border-[#E5E5E5]">
+            <div className="pt-1 space-y-4 border-[#E5E5E5]">
               {/* Билеты */}
               <div className="flex items-center justify-between">
                 <label className={`block text-sm mb-1 ${colorScheme === "light" ? "text-[#1A1A1A]" : "text-white"}`}>Билеты</label>

@@ -32,32 +32,44 @@ export default function EventOverview() {
             to={`/events/${id}/edit`}
             className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
           >
-            Edit Event
+            Редактировать мероприятие
           </Link>
         </div>
 
         {/* Основная информация */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div>
-            <h2 className="text-xl font-semibold">When & Where</h2>
+            <h2 className="text-xl font-semibold">Когда и Где</h2>
             <p className="mt-2">
               {formatEventDateTime(event.start_datetime, event.end_datetime)}
             </p>
             <p className="mt-2">
-              {event.online_link || <span className="italic text-gray-500">Location missing</span>}
+              {event.online_link || <span className="italic text-gray-500">Место проведения не указано</span>}
             </p>
           </div>
           <div>
-            <h2 className="text-xl font-semibold">Details</h2>
+            <h2 className="text-xl font-semibold">Подробности</h2>
             <p className="mt-2">{event.description || "-"}</p>
           </div>
         </div>
 
         {/* Действия */}
         <div className="flex space-x-4">
-          <button className="px-4 py-2 bg-blue-500 text-white rounded">Invite Guests</button>
-          <button className="px-4 py-2 bg-purple-500 text-white rounded">Send a Blast</button>
-          <button className="px-4 py-2 bg-pink-500 text-white rounded">Share Event</button>
+          <button className="px-4 py-2 bg-blue-500 text-white rounded">Пригласить гостей</button>
+          <button className="px-4 py-2 bg-purple-500 text-white rounded">Рассылка</button>
+          <button className="px-4 py-2 bg-pink-500 text-white rounded">Поделиться мероприятием</button>
+          <button
+            className="px-4 py-2 bg-red-600 text-white rounded"
+            onClick={() => {
+              if (window.confirm("Вы уверены, что хотите удалить это мероприятие?")) {
+                apiFetch(`/events/${id}`, { method: 'DELETE' })
+                  .then(() => window.location.href = "/")
+                  .catch(err => alert("Ошибка удаления мероприятия"));
+              }
+            }}
+          >
+            Удалить мероприятие
+          </button>
         </div>
       </div>
     </>

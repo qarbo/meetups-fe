@@ -1,5 +1,3 @@
-// src/utils/dateUtils.js
-
 export function formatEventDateTime(start_datetime, end_datetime) {
     const startDate = new Date(start_datetime);
     const endDate = new Date(end_datetime);

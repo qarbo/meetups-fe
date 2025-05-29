@@ -37,6 +37,8 @@ export default function InviteThemeModal({ themes, selectedTheme, setSelectedThe
 
   const colorPickerRef = useRef(null);
   const fontPickerRef = useRef(null);
+  const emojiPickerRef = useRef(null);
+  const emojiButtonRef = useRef(null);
 
   useEffect(() => {
     const savedColorScheme = localStorage.getItem("colorScheme");
@@ -58,6 +60,9 @@ export default function InviteThemeModal({ themes, selectedTheme, setSelectedThe
       }
       if (fontPickerRef.current && !fontPickerRef.current.contains(event.target)) {
         setShowFontPicker(false);
+      }
+      if (emojiPickerRef.current && !emojiPickerRef.current.contains(event.target) && emojiButtonRef.current && !emojiButtonRef.current.contains(event.target)) {
+        setShowEmojiPicker(false);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
@@ -160,13 +165,17 @@ export default function InviteThemeModal({ themes, selectedTheme, setSelectedThe
           {/* Кнопка выбора emoji/pattern */}
           <div className="relative inline-block">
             <button
+              ref={emojiButtonRef}
               className="w-full h-12 rounded bg-white/30 backdrop-blur-md text-sm shadow flex items-center gap-2 justify-center"
               disabled={selectedTheme === "minimal"}
-              onClick={() => {
+              onClick={(e) => {
+                e.stopPropagation(); // предотвращает всплытие события клика
                 if (selectedTheme === "emoji") {
-                  setShowEmojiPicker((prev) => !prev);
+                  setShowPatternPicker(false);
+                  setShowEmojiPicker(!showEmojiPicker);
                 } else if (selectedTheme === "pattern") {
-                  setShowPatternPicker((prev) => !prev);
+                  setShowEmojiPicker(false);
+                  setShowPatternPicker(!showPatternPicker);
                 }
               }}
             >
@@ -179,7 +188,7 @@ export default function InviteThemeModal({ themes, selectedTheme, setSelectedThe
                 : "Выбрать"}
             </button>
             {selectedTheme === "emoji" && showEmojiPicker && (
-              <div className="absolute z-50 bottom-full mb-2 bg-white rounded-lg shadow-md p-2 grid grid-cols-6 gap-2 min-w-[20rem] max-w-[20rem]">
+              <div ref={emojiPickerRef} className="absolute z-50 bottom-full mb-2 bg-white rounded-lg shadow-md p-2 grid grid-cols-6 gap-2 min-w-[20rem] max-w-[20rem]">
                 {["😀", "🎉", "🚀", "🌈", "🔥", "💡", "🇷🇺", "🍕", "🍺", "🍸", "🫦", "♥️", "🏐", "🎾", "🏀", "⚽️", "🎱", "🌴"].map((emoji) => (
                   <div
                     key={emoji}

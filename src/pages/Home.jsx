@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { apiFetch } from "../api";
 import { Link } from "react-router-dom";
+import { formatEventDateTime } from '../utils/dateUtils';
 
 // Функции-помощники для сравнения дат
 function isToday(dateString) {
@@ -63,7 +64,6 @@ export default function Home() {
         <div className="md:col-span-2">
           <div className="space-y-6">
             {events.map((event) => {
-              const formattedTime = new Date(event.date).toLocaleTimeString("ru-RU", { hour: '2-digit', minute: '2-digit' });
               return (
                 <Link
                   key={event.id}
@@ -72,7 +72,7 @@ export default function Home() {
                 >
                   <div className="bg-white rounded-lg p-4 flex items-start justify-between gap-4 shadow-sm hover:shadow transition">
                     <div className="flex-1 min-w-0">
-                      <div className="text-sm text-gray-400">{formattedTime}</div>
+                      <div className="text-sm text-gray-400">{formatEventDateTime(event.start_datetime, event.end_datetime)}</div>
                       <h2 className="text-lg font-semibold mb-1 truncate">{event.title}</h2>
                       <div className="flex items-center gap-2 text-sm text-gray-500 mb-1">
                         <span role="img" aria-label="Организатор">👤</span>
@@ -82,12 +82,12 @@ export default function Home() {
                         <span role="img" aria-label="Локация">📍</span>
                         <span className="truncate">{event.location}</span>
                       </div>
-                      <div className="flex mt-2 -space-x-2">
+                      {/* <div className="flex mt-2 -space-x-2">
                         <div className="w-6 h-6 rounded-full bg-gray-300 border-2 border-white" />
                         <div className="w-6 h-6 rounded-full bg-gray-300 border-2 border-white" />
                         <div className="w-6 h-6 rounded-full bg-gray-300 border-2 border-white" />
                         <span className="text-xs text-gray-500 ml-2">+361</span>
-                      </div>
+                      </div> */}
                     </div>
                     <img
                       src={event.cover_image_url}

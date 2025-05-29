@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { apiFetch } from "../api";
 import { FaTheRedYeti, FaUpload } from "react-icons/fa";
 import "../styles/emojiBackground.css";
-import useCanvasAnimation from "../hooks/useCanvasAnimation";
+import CanvasTheme from "../components/CanvasTheme";
 
 import RegisterModal from "../components/RegisterModal";
 import CustomDropdown from "../components/CustomDropdown";
@@ -108,8 +108,6 @@ export default function CreateEvent() {
     "Australia/Sydney",
   ];
 
-// Управление анимацией canvas
-useCanvasAnimation(selectedTheme, selectedEmoji);
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -155,6 +153,14 @@ useCanvasAnimation(selectedTheme, selectedEmoji);
     // Combine date and time into ISO strings
     const start_datetime = `${startDate}T${startTime}`;
     const end_datetime = `${endDate}T${endTime}`;
+    const themeSettings = {
+      canvasColor,
+      colorScheme,
+      theme: selectedTheme,
+      font: inputFont,
+      emoji: selectedEmoji,
+      pattern: selectedPattern,
+    };
     const newEvent = {
       title,
       description,
@@ -167,6 +173,7 @@ useCanvasAnimation(selectedTheme, selectedEmoji);
       capacity: capacity ? parseInt(capacity, 10) : null,
       cover_image_id: imageId,
       cover_image_url: imageUrl,
+      theme: JSON.stringify(themeSettings),
     };
     try {
       const res = await apiFetch("/events/", {
@@ -213,19 +220,11 @@ useCanvasAnimation(selectedTheme, selectedEmoji);
         />
       )}
     <div style={{ position: "relative" }}>
-      <canvas
-        id="canvas"
-        className={`${colorScheme === "light"
-          ? colorOptions.find(c => c.id === canvasColor)?.color
-          : colorOptions.find(c => c.id === canvasColor)?.darkColor}`}
-        style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          zIndex: -1,
-          width: "100vw",
-          height: "100vh"
-        }}
+      <CanvasTheme
+        selectedTheme={selectedTheme}
+        selectedEmoji={selectedEmoji}
+        canvasColor={canvasColor}
+        colorScheme={colorScheme}
       />
       <div className="min-h-screen px-6 pb-6 text-[#1A1A1A]">
         <div className="max-w-5xl mx-auto rounded-xl p-1 flex flex-col lg:flex-row gap-6 items-start">

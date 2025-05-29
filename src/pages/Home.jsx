@@ -70,7 +70,7 @@ export default function Home() {
                   to={`/events/${event.id}`}
                   className="block"
                 >
-                  <div className="bg-white border rounded-lg p-4 flex items-start justify-between gap-4 shadow-sm hover:shadow transition">
+                  <div className="bg-white rounded-lg p-4 flex items-start justify-between gap-4 shadow-sm hover:shadow transition">
                     <div className="flex-1 min-w-0">
                       <div className="text-sm text-gray-400">{formattedTime}</div>
                       <h2 className="text-lg font-semibold mb-1 truncate">{event.title}</h2>

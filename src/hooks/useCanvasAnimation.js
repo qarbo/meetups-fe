@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-export default function useCanvasAnimation(selectedTheme, selectedEmoji) {
+export default function useCanvasAnimation(selectedTheme, selectedEmoji, forCard = false, coords = null) {
   useEffect(() => {
     console.log("selectedTheme", selectedTheme);
     console.log("selectedEmoji", selectedEmoji);
@@ -21,15 +21,16 @@ export default function useCanvasAnimation(selectedTheme, selectedEmoji) {
 
     const emojis = selectedTheme === "emoji" ? [selectedEmoji] : [];
     console.log("emojis", emojis);
-    const particles = emojis.length > 0 ? new Array(30).fill(0).map(() => ({
+    const area = coords || { x: 0, y: 0, width: window.innerWidth, height: window.innerHeight };
+    const particles = emojis.length > 0 ? new Array(forCard ? 8 : 30).fill(0).map(() => ({
       emoji: emojis[Math.floor(Math.random() * emojis.length)],
-      x: Math.random() * window.innerWidth,
-      y: Math.random() * window.innerHeight,
-      speedY: (Math.random() - 0.5) * 1, // движение вверх и вниз
-      speedX: (Math.random() - 0.5) * 1, // движение влево и вправо
-      angle: Math.random() * Math.PI * 2, // начальный угол наклона
-      rotationSpeed: (Math.random() - 0.5) * 0.02, // скорость вращения
-      size: 20 + Math.random() * 40,
+      x: area.x + Math.random() * area.width,
+      y: area.y + Math.random() * area.height,
+      speedY: (Math.random() - 0.5) * 1,
+      speedX: (Math.random() - 0.5) * 1,
+      angle: Math.random() * Math.PI * 2,
+      rotationSpeed: (Math.random() - 0.5) * 0.02,
+      size: forCard ? 15 + Math.random() * 10 : 20 + Math.random() * 40,
     })) : [];
 
     let animationId;
@@ -46,8 +47,8 @@ export default function useCanvasAnimation(selectedTheme, selectedEmoji) {
         p.x += p.speedX;
         p.angle += p.rotationSpeed;
 
-        if (p.x < 0 || p.x > window.innerWidth) p.speedX *= -1;
-        if (p.y < 0 || p.y > window.innerHeight) p.speedY *= -1;
+        if (p.x < 0 || p.x > area.width) p.speedX *= -1;
+        if (p.y < 0 || p.y > area.height) p.speedY *= -1;
 
         ctx.save();
         ctx.translate(p.x, p.y);
@@ -66,5 +67,5 @@ export default function useCanvasAnimation(selectedTheme, selectedEmoji) {
       cancelAnimationFrame(animationId);
       window.removeEventListener("resize", resize);
     };
-  }, [selectedTheme, selectedEmoji]);
+  }, [selectedTheme, selectedEmoji, forCard, coords]);
 }

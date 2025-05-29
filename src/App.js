@@ -51,13 +51,18 @@ export default function App() {
 
   function AppContent() {
     const location = useLocation();
-    const isTransparentNavbar = location.pathname === "/create";
+    const isTransparentNavbar =
+      location.pathname === "/create" ||
+      /^\/events\/[^/]+\/edit$/.test(location.pathname);
     const currentPath = location.pathname;
     return (
       <>
         {showRegisterModal && <RegisterModal onClose={() => setShowRegisterModal(false)} />}
         {showLoginModal && <LoginModal onClose={() => setShowLoginModal(false)} />}
-        <div className="relative min-h-screen text-gray-900 font-sans">
+        <div
+          className="relative min-h-screen text-gray-900 font-sans"
+          style={isTransparentNavbar ? {} : { backgroundColor: 'rgb(245, 245, 245)' }}
+        >
           <header className={`${isTransparentNavbar ? 'bg-gradient-to-b from-white to-transparent' : 'bg-gradient-to-b from-purple-100 to-transparent'} shadow-none`}>
           <div className="max-w-7xl mx-auto px-4 py-2 flex justify-between items-center">
             <Link to={isAuthenticated ? ("/discover") : ("/")}  className="text-2xl font-bold tracking-tight">ГДЕ?</Link>

@@ -4,9 +4,9 @@ import CanvasTheme from "./CanvasTheme";
 export default function EventCard({ event }) {
   const cardRef = useRef(null);
   const [coords, setCoords] = useState(null);
-  const rect = cardRef.current.getBoundingClientRect()
 
   useEffect(() => {
+    const rect = cardRef.current.getBoundingClientRect();
     if (cardRef.current) {
     //   const rect = cardRef.current.getBoundingClientRect();
       setCoords({ x: 0, y: 0, width: rect.width, height: rect.height });
@@ -23,8 +23,8 @@ export default function EventCard({ event }) {
         style={{
           position: "absolute",
           zIndex: 0,
-          width: rect.width,
-          height: rect.height
+          width: "100%",
+          height: "100%"
         }}
         forCard={true}
         coords={coords}

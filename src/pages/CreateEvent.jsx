@@ -243,7 +243,7 @@ export default function CreateEvent() {
               <img
                 src={image ? URL.createObjectURL(image) : defaultEventImage}
                 alt="preview"
-                className="w-full aspect-square object-cover rounded shadow-sm"
+                className="w-full aspect-square object-cover rounded shadow-sm lg:w-full sm:w-3/5"
               />
               <label className="absolute bottom-2 right-2 cursor-pointer bg-[#FFD5DC] text-[#1A1A1A] p-2 rounded-full hover:bg-[#E0E0E0]">
                 <FaUpload />

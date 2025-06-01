@@ -299,7 +299,6 @@ export default function CreateEvent() {
             <div className="mb-2">
               <input
                 type="text"
-                autoFocus
                 className={`w-full rounded ${locationError ? 'border border-red-500' : ''} bg-white/30 backdrop-blur-md ${colorScheme === "light" ? "text-[#1A1A1A] placeholder:text-[#999999]" : "text-white placeholder:text-[#CCCCCC]"}  px-3 py-2 ${inputFont}`}
                 placeholder="Введите название события"
                 value={title}

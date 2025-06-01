@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useState } from "react";
 import CanvasTheme from "./CanvasTheme";
 import { formatEventDateTime } from "../utils/dateUtils";
+import defaultEventImage from "../assets/invitation.png";
 
 export default function EventCard({ event }) {
   const cardRef = useRef(null);
@@ -35,7 +36,7 @@ export default function EventCard({ event }) {
       />
       <div className="rounded-lg overflow-hidden relative z-10 flex-none">
         <img
-          src={event.cover_image_url}
+          src={event.cover_image_url || defaultEventImage}
           alt={event.title}
           className="aspect-square object-cover max-h-20 max-w-20"
         />
@@ -45,7 +46,7 @@ export default function EventCard({ event }) {
         <p className="text-xs text-gray-500">
           {formatEventDateTime(event.start_datetime, event.end_datetime)}
         </p>
-        <p className="mt-2 text-xs">{event.description || "No description available"}</p>
+        <p className="mt-2 text-xs">{event.description || "Без описания"}</p>
         <div className="mt-4 flex space-x-2">
         </div>
       </div>

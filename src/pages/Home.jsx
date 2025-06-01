@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { apiFetch } from "../api";
 import { Link } from "react-router-dom";
 import { formatEventDateTime } from '../utils/dateUtils';
+import defaultEventImage from "../assets/invitation.png";
 
 // Функции-помощники для сравнения дат
 function isToday(dateString) {
@@ -90,7 +91,7 @@ export default function Home() {
                       </div> */}
                     </div>
                     <img
-                      src={event.cover_image_url}
+                      src={event.cover_image_url || defaultEventImage}
                       alt={event.title}
                       className="w-24 h-24 rounded-lg object-cover flex-shrink-0"
                     />

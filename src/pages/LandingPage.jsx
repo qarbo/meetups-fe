@@ -33,6 +33,7 @@ export default function LandingPage() {
 
   return (
     <div className="relative h-screen w-screen overflow-hidden">
+      <div className="block md:hidden h-24" />
       <canvas id="landing-canvas" style={{
         position: "fixed",
         top: 0,
@@ -42,9 +43,6 @@ export default function LandingPage() {
         height: "100vh"
       }} />
       <div className="relative z-10 flex flex-col md:flex-row items-center justify-center h-screen text-center md:text-left gap-8 px-6 md:px-24 py-6 md:py-12">
-        
-        <div className="block md:hidden h-48" />
-        
         <div className="md:w-1/2 order-1 md:order-1">
           <h1 className="text-3xl font-bold mb-4">
             Незабываемые события <span className="text-pink-500">начинаются здесь.</span>
@@ -63,7 +61,7 @@ export default function LandingPage() {
           <img
             src={landingImage}
             alt="event preview"
-            className="mx-auto md:w-full rounded"
+            className="mx-auto md:w-full max-h-screen rounded"
           />
         </div>
       </div>

@@ -5,6 +5,7 @@ export default function Profile() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showUpload, setShowUpload] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -44,17 +45,63 @@ export default function Profile() {
 
       {/* Профиль пользователя */}
       <div className="bg-white p-6 rounded shadow flex items-center gap-6 mb-6">
-        {/* <img
-          src={user.avatarUrl || user.avatar}
-          alt={user.name}
-          className="w-24 h-24 rounded-full object-cover"
-        /> */}
+        <button
+          onClick={() => setShowUpload(true)}
+          className="w-24 h-24 rounded-full overflow-hidden relative"
+        >
+          <img
+            src={user.avatar_url || user.avatar || 'https://cdn-icons-png.freepik.com/512/6858/6858441.png'}
+            alt={user.name}
+            className="w-full h-full object-cover"
+          />
+          <span className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center text-white text-sm">
+            Изменить
+          </span>
+        </button>
         <div>
           <h3 className="text-xl font-semibold">{user.name}</h3>
           {/* <p className="text-sm text-gray-500">{user.city}</p> */}
           {/* <p className="mt-2 text-sm text-gray-700">{user.bio}</p> */}
         </div>
       </div>
+
+      {showUpload && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded shadow max-w-sm w-full">
+            <h2 className="text-xl font-bold mb-4">Загрузить новый аватар</h2>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) => {
+                const file = e.target.files[0];
+                if (file) {
+                  const formData = new FormData();
+                  formData.append("avatar", file);
+                  apiFetch("/auth/me/avatar", {
+                    method: "POST",
+                    body: formData,
+                  })
+                    .then(res => {
+                      if (!res.ok) throw new Error("Ошибка загрузки");
+                      return res.json();
+                    })
+                    .then(data => {
+                      setUser(prev => ({ ...prev, avatar_url: data.avatar_url }));
+                      setShowUpload(false);
+                    })
+                    .catch(err => alert(err.message));
+                }
+              }}
+            />
+            <button
+              className="mt-4 px-4 py-2 bg-gray-300 rounded"
+              onClick={() => setShowUpload(false)}
+            >
+              Отмена
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Группы */}
       <div className="mb-6">

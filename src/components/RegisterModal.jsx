@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useContext } from "react";
+import { useTranslation } from "react-i18next";
 import { API_BASE } from "../config";
 import { apiFetch } from "../api";
 import { AuthContext } from "../context/AuthContext";
 
 export default function RegisterModal({ onClose }) {
+  const { t } = useTranslation();
   const isLocalhost = window.location.hostname === "localhost";
   const { isAuthenticated } = useContext(AuthContext);
   const [email, setEmail] = useState("");
@@ -89,31 +91,31 @@ export default function RegisterModal({ onClose }) {
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
       <div className="bg-white rounded-lg shadow-lg p-6 w-96">
-        <h2 className="text-xl font-semibold mb-2">Добро пожаловать</h2>
-        <p className="mb-4 text-sm text-gray-600">Пожалуйста зарегистрируйтесь/войдите ниже.</p>
+        <h2 className="text-xl font-semibold mb-2">{t('register.title')}</h2>
+        <p className="mb-4 text-sm text-gray-600">{t('register.subtitle')}</p>
         {isLocalhost && (
           <form onSubmit={handleSubmit}>
             <input
               type="email"
-              placeholder="Email"
+              placeholder={t('register.email')}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full border px-3 py-2 mb-3 rounded"
             />
             <input
               type="password"
-              placeholder="Пароль"
+              placeholder={t('register.password')}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="w-full border px-3 py-2 mb-3 rounded"
             />
-            {error && <p className="text-red-500 text-sm mb-2">{error}</p>}
+            {error && <p className="text-red-500 text-sm mb-2">{error === "Ошибка регистрации" ? t('register.error') : error}</p>}
             <button
               type="submit"
               disabled={loading}
               className="w-full bg-black text-white py-2 rounded mb-3 disabled:opacity-50"
             >
-              {loading ? "Загрузка..." : "Регистрация по почте"}
+              {loading ? t('register.loading') : t('register.submit')}
             </button>
           </form>
         )}
@@ -123,7 +125,7 @@ export default function RegisterModal({ onClose }) {
             onClick={onClose}
             className="mt-4 text-sm text-gray-500 underline"
           >
-            Закрыть
+            {t('register.close')}
           </button>
         )}
       </div>

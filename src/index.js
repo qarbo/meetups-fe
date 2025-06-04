@@ -4,6 +4,7 @@ import '@fontsource/pt-sans';
 import '@fontsource/montserrat'; 
 import '@fontsource/noto-sans'; 
 import '@fontsource/lato';
+import './styles/fonts.css';
 
 import React from 'react';
 import ReactDOM from 'react-dom/client';

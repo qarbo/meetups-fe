@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { apiFetch } from "../api";
 
 export default function Profile() {
+  const { t } = useTranslation();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -33,15 +35,15 @@ export default function Profile() {
   }, []);
 
   if (loading) {
-    return <p>Загрузка профиля...</p>;
+    return <p>{t('profile.loading')}</p>;
   }
   if (error) {
-    return <p className="text-red-500">Ошибка: {error}</p>;
+    return <p className="text-red-500">{t('profile.error')}: {error}</p>;
   }
 
   return (
     <div className="max-w-3xl mx-auto">
-      <h2 className="text-2xl font-bold mb-6">Профиль</h2>
+      <h2 className="text-2xl font-bold mb-6">{t('profile.title')}</h2>
 
       {/* Профиль пользователя */}
       <div className="bg-white p-6 rounded shadow flex items-center gap-6 mb-6">
@@ -55,7 +57,7 @@ export default function Profile() {
             className="w-full h-full object-cover"
           />
           <span className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center text-white text-sm">
-            Изменить
+            {t('profile.changeAvatar')}
           </span>
         </button>
         <div>
@@ -68,7 +70,7 @@ export default function Profile() {
       {showUpload && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-6 rounded shadow max-w-sm w-full">
-            <h2 className="text-xl font-bold mb-4">Загрузить новый аватар</h2>
+            <h2 className="text-xl font-bold mb-4">{t('profile.uploadTitle')}</h2>
             <input
               type="file"
               accept="image/*"
@@ -97,7 +99,7 @@ export default function Profile() {
               className="mt-4 px-4 py-2 bg-gray-300 rounded"
               onClick={() => setShowUpload(false)}
             >
-              Отмена
+              {t('profile.cancel')}
             </button>
           </div>
         </div>
@@ -105,7 +107,7 @@ export default function Profile() {
 
       {/* Группы */}
       <div className="mb-6">
-        <h4 className="text-lg font-semibold mb-2">Участник групп</h4>
+        <h4 className="text-lg font-semibold mb-2">{t('profile.groups')}</h4>
         {/* <ul className="flex flex-wrap gap-2 text-sm">
           {user.groups.map((group, idx) => (
             <li
@@ -120,7 +122,7 @@ export default function Profile() {
 
       {/* Мероприятия */}
       <div>
-        <h4 className="text-lg font-semibold mb-2">Организованные мероприятия</h4>
+        <h4 className="text-lg font-semibold mb-2">{t('profile.organizedEvents')}</h4>
         {/* <ul className="space-y-3">
           {user.events.map((event, idx) => (
             <li key={idx} className="bg-white p-4 rounded shadow">

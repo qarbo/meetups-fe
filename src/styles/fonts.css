@@ -1,0 +1,27 @@
+@font-face {
+  font-family: 'Faberge';
+  src: url('../assets/Faberge-Regular.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Ostrovsky';
+  src: url('../assets/Ostrovsky-Bold.otf') format('opentype');
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Pixeloid';
+  src: url('../assets/PixeloidMono.ttf') format('opentype');
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Remark';
+  src: url('../assets/Remark.otf') format('opentype');
+  font-weight: bold;
+  font-style: normal;
+}

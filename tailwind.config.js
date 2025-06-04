@@ -14,9 +14,12 @@ module.exports = {
         'noto-sans': ['Noto Sans', 'sans-serif'],
         'lato': ['Lato', 'sans-serif'],
         'arial': ['Arial', 'sans-serif'],
+        'faberge': ['Faberge', 'serif'],
+        'ostrovsky': ['Ostrovsky', 'serif'],
+        'pixeloid': ['Pixeloid', 'serif'],
+        'remark': ['Remark', 'serif'],
       }
     },
   },
   plugins: [],
 }
-

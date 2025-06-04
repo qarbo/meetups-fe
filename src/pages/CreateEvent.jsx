@@ -1,4 +1,6 @@
 import React, { useEffect, useState, useContext, useRef } from "react";
+import { useTranslation } from "react-i18next";
+import { Helmet } from "react-helmet";
 import { LocalizationProvider, DateTimePicker } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import ruLocale from 'date-fns/locale/ru';
@@ -13,6 +15,7 @@ import CustomDropdown from "../components/CustomDropdown";
 import InviteThemeModal from "../components/InviteThemeModal";
 import { AnimatePresence } from "framer-motion";
 import { AuthContext } from "../context/AuthContext";
+import { fonts } from "../utils/constants"
 import defaultEventImage from "../assets/invitation.png";
 
 function loadFromLocalStorage(key, setter, parseJson = false) {
@@ -21,6 +24,7 @@ function loadFromLocalStorage(key, setter, parseJson = false) {
 }
 
 export default function CreateEvent() {
+  const { t } = useTranslation();
   // Состояния для выбранных эмодзи и паттерна (инициализация выше)
   const [selectedEmoji, setSelectedEmoji] = useState("😀");
   const [selectedPattern, setSelectedPattern] = useState("pattern1");
@@ -191,7 +195,22 @@ export default function CreateEvent() {
         throw new Error("Event creation failed");
       }
       const created = await res.json();
-      navigate(`/events/${created.id}`);
+      navigate(`/event-overview/${created.id}`);
+      // Reset to default theme settings
+      setCanvasColor("gray");
+      setColorScheme("light");
+      setInputFont("font-sans");
+      setSelectedTheme(null);
+      setSelectedEmoji("😀");
+      setSelectedPattern("pattern1");
+
+      // Clear from localStorage as well
+      localStorage.removeItem("canvasColor");
+      localStorage.removeItem("colorScheme");
+      localStorage.removeItem("inputFont");
+      localStorage.removeItem("selectedTheme");
+      localStorage.removeItem("selectedEmoji");
+      localStorage.removeItem("selectedPattern");
     } catch (err) {
       console.error(err);
     }
@@ -217,6 +236,12 @@ export default function CreateEvent() {
     }
   };
 
+  const readableDate = startDateTime.toLocaleDateString("ru-RU", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+
   return (
     <>
       {forceShowModal && (
@@ -225,6 +250,10 @@ export default function CreateEvent() {
           forceOpen={true}
         />
       )}
+      <Helmet>
+        <title>{t('createEvent.pageTitle')}</title>
+        <meta name="description" content={`${t('createEvent.pageTitle')} ${readableDate}`} />
+      </Helmet>
     <div style={{ position: "relative" }}>
       <CanvasTheme
         selectedTheme={selectedTheme}
@@ -267,7 +296,7 @@ export default function CreateEvent() {
               onClick={() => setShowThemeModal(true)}
               className={`bg-white/40 backdrop-blur-md ${colorScheme === "light" ? "text-black" : "text-white"} px-2 py-1 rounded hover:bg-white/70 text-sm`}
             >
-              Выбрать тему приглашения
+              {t('createEvent.selectTheme')}
             </button>
             {/* {selectedTheme && (
               <span className="ml-3 text-sm flex items-center">
@@ -285,8 +314,8 @@ export default function CreateEvent() {
           <div className="flex justify-between">
             <CustomDropdown
               options={[
-                { value: "public", label: "🌐 Публичное", description: "Показывается в календаре и может быть выделено." },
-                { value: "private", label: "✨ Приватное", description: "Не отображается в календаре. Только по ссылке." }
+                { value: "public", label: `🌐 ${t('createEvent.visibility.public')}`, description: t('createEvent.visibility.publicDescription') },
+                { value: "private", label: `✨ ${t('createEvent.visibility.private')}`, description: t('createEvent.visibility.privateDescription') }
               ]}
               selected={visibility}
               setSelected={setVisibility}
@@ -300,7 +329,7 @@ export default function CreateEvent() {
               <input
                 type="text"
                 className={`w-full rounded ${locationError ? 'border border-red-500' : ''} bg-white/30 backdrop-blur-md ${colorScheme === "light" ? "text-[#1A1A1A] placeholder:text-[#999999]" : "text-white placeholder:text-[#CCCCCC]"}  px-3 py-2 ${inputFont}`}
-                placeholder="Введите название события"
+                placeholder={t('createEvent.titlePlaceholder')}
                 value={title}
                 onChange={(e) => {
                   setTitle(e.target.value);
@@ -315,7 +344,7 @@ export default function CreateEvent() {
                 <div className="flex flex-col justify-center px-3 py-2 space-y-3 w-full">
                   <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={ruLocale}>
                     <DateTimePicker
-                      label="Начало"
+                      label={t('createEvent.startLabel')}
                       value={startDateTime}
                       onChange={(newValue) => {
                         setStartDateTime(newValue);
@@ -330,7 +359,7 @@ export default function CreateEvent() {
                       renderInput={(params) => <TextField {...params} fullWidth />}
                     />
                     <DateTimePicker
-                      label="Окончание"
+                      label={t('createEvent.endLabel')}
                       value={endDateTime}
                       onChange={(newValue) => setEndDateTime(newValue)}
                       ampm={false}
@@ -347,7 +376,7 @@ export default function CreateEvent() {
                 <input
                   type="text"
                   className={`w-full rounded ${locationError ? 'border border-red-500' : ''} bg-white/30 backdrop-blur-md ${colorScheme === "light" ? "text-[#1A1A1A] placeholder:text-[#999999]" : "text-white placeholder:text-[#CCCCCC]"}  px-3 py-2 ${inputFont}`}
-                  placeholder="Офлайн место или ссылка для онлайн"
+                  placeholder={t('createEvent.locationPlaceholder')}
                   value={location}
                   onChange={(e) => {
                     setLocation(e.target.value);
@@ -377,7 +406,7 @@ export default function CreateEvent() {
             <div>
               <textarea
                 className={`w-full rounded bg-white/30 backdrop-blur-md ${colorScheme === "light" ? "text-[#1A1A1A]" : "text-white placeholder:text-[#CCCCCC]"} placeholder:text-[#999999] px-3 py-2 ${inputFont}`}
-                placeholder="Дополнительная информация"
+                placeholder={t('createEvent.descriptionPlaceholder')}
                 rows={3}
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
@@ -388,21 +417,21 @@ export default function CreateEvent() {
             <div className="pt-1 space-y-4 border-[#E5E5E5]">
               {/* Билеты */}
               <div className="flex items-center justify-between">
-                <label className={`block text-sm mb-1 ${colorScheme === "light" ? "text-[#1A1A1A]" : "text-white"}`}>Билеты</label>
+                <label className={`block text-sm mb-1 ${colorScheme === "light" ? "text-[#1A1A1A]" : "text-white"}`}>{t('createEvent.ticketsLabel')}</label>
                 <select
                   className={`rounded px-2 py-1 bg-white/30 backdrop-blur-md ${colorScheme === "light" ? "text-[#1A1A1A]" : "text-white"} placeholder:text-[#999999] ${inputFont}`}
                   value={tickets}
                   onChange={(e) => setTickets(e.target.value)}
                 >
-                  <option value="free">Бесплатно</option>
-                  <option value="paid">Платно</option>
+                  <option value="free">{t('createEvent.tickets.free')}</option>
+                  <option value="paid">{t('createEvent.tickets.paid')}</option>
                 </select>
               </div>
 
               {/* Требуется подтверждение */}
               <div className="flex items-center justify-between">
                 <label className={`block text-sm mb-1 ${colorScheme === "light" ? "text-[#1A1A1A]" : "text-white"}`}>
-                  Требуется подтверждение
+                  {t('createEvent.approvalLabel')}
                 </label>
                 <label className="relative inline-flex items-center cursor-pointer">
                   <input
@@ -417,11 +446,11 @@ export default function CreateEvent() {
 
               {/* Вместимость */}
               <div className="flex items-center justify-between">
-                <label className={`block text-sm mb-1 ${colorScheme === "light" ? "text-[#1A1A1A]" : "text-white"}`}>Вместимость</label>
+                <label className={`block text-sm mb-1 ${colorScheme === "light" ? "text-[#1A1A1A]" : "text-white"}`}>{t('createEvent.capacityLabel')}</label>
                 <input
                   type="text"
                   className={`w-24 rounded bg-white/30 backdrop-blur-md ${colorScheme === "light" ? "text-[#1A1A1A]" : "text-white placeholder:text-[#CCCCCC]"} placeholder:text-[#999999] px-3 py-1 ${inputFont}`}
-                  placeholder="Без ограничения"
+                  placeholder={t('createEvent.capacityPlaceholder')}
                   value={capacity}
                   onChange={(e) => setCapacity(e.target.value)}
                 />
@@ -434,7 +463,7 @@ export default function CreateEvent() {
               type="submit"
               className="w-full bg-white text-[#1A1A1A] py-2 rounded shadow-sm hover:bg-[#FFC8D4]"
             >
-              Создать событие
+              {t('createEvent.submitButton')}
             </button>
           </div>
         </form>
@@ -463,19 +492,11 @@ export default function CreateEvent() {
             }}
             colorOptions={colorOptions}
             onFontChange={(fontId) => {
-              const fontStyles = [
-                { id: "default", style: "font-sans" },
-                { id: "museo", style: "font-serif" },
-                { id: "factoria", style: "font-mono" },
-                { id: "garamond", style: "font-serif" },
-                { id: "roc", style: "font-serif" },
-                { id: "nunito", style: "font-sans" },
-                { id: "pearl", style: "font-sans" },
-                { id: "departure", style: "font-mono" },
-              ];
-              const selectedFont = fontStyles.find(f => f.id === fontId);
+              const selectedFont = fonts.find(f => f.id === fontId);
               if (selectedFont) {
                 setInputFont(selectedFont.style);
+                document.documentElement.classList.remove(...fonts.map(f => f.style));
+                document.documentElement.classList.add(selectedFont.style);
                 localStorage.setItem("inputFont", selectedFont.style);
               }
             }}

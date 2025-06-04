@@ -1,0 +1,125 @@
+{
+    "app": {
+        "title": "WHERE?"
+    },
+    "nav": {
+        "events": "Events",
+        "calendar": "Calendar",
+        "createEvent": "Create Event",
+        "profile": "Profile",
+        "logout": "Logout"
+    },
+    "auth": {
+        "loginRegister": "Login / Register"
+    },
+    "home": {
+        "title": "What's happening in Moscow",
+        "today": "Today",
+        "weekdays": [
+            "Sunday",
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday"
+        ],
+        "organizer": "Organizer",
+        "city": "Moscow",
+        "subscribeDescription": "Follow the best events in Moscow and get notified first.",
+        "subscribed": "Subscribed"
+    },
+    "landing": {
+        "title": {
+            "part1": "Unforgettable events",
+            "part2": "start here."
+        },
+        "description": "Create an event page, invite friends, and sell tickets. Host an unforgettable experience today.",
+        "createButton": "Create your first event"
+    },
+    "createEvent": {
+        "pageTitle": "Create Event",
+        "titlePlaceholder": "Enter event name",
+        "startLabel": "Start",
+        "endLabel": "End",
+        "locationPlaceholder": "Offline address or online link",
+        "descriptionPlaceholder": "Additional details",
+        "ticketsLabel": "Tickets",
+        "tickets": {
+            "free": "Free",
+            "paid": "Paid"
+        },
+        "approvalLabel": "Requires approval",
+        "capacityLabel": "Capacity",
+        "capacityPlaceholder": "No limit",
+        "submitButton": "Create Event",
+        "selectTheme": "Choose invitation theme",
+        "visibility": {
+            "public": "Public",
+            "private": "Private",
+            "publicDescription": "Visible in the calendar and can be highlighted.",
+            "privateDescription": "Not shown in the calendar. Accessible only via link."
+        }
+    },
+    "eventDetails": {
+        "loading": "Loading...",
+        "metaDescription": "Event on {{date}}",
+        "time": "Time",
+        "registration": "Registration",
+        "registerPrompt": "Welcome! To join the event, please register below.",
+        "registerButton": "Register",
+        "loginRegister": "Login / Register"
+    },
+    "eventOverview": {
+        "loadError": "Failed to load event",
+        "loadEditError": "Failed to load event data for editing",
+        "editButton": "Edit event",
+        "whenWhere": "When and Where",
+        "noLocation": "Location not specified",
+        "details": "Details",
+        "share": "Share event",
+        "delete": "Delete event",
+        "linkCopied": "Link copied!",
+        "editTitle": "Edit event",
+        "titlePlaceholder": "Enter event name",
+        "locationPlaceholder": "Offline address or online link",
+        "descriptionPlaceholder": "Additional details",
+        "public": "🌐 Public",
+        "private": "✨ Private",
+        "save": "Save",
+        "cancel": "Cancel",
+        "confirmDeleteTitle": "Confirm deletion",
+        "confirmDeleteBody": "Are you sure you want to delete this event?",
+        "deleteError": "Failed to delete event"
+    },
+    "profile": {
+        "loading": "Loading profile...",
+        "error": "Error",
+        "title": "Profile",
+        "changeAvatar": "Change",
+        "uploadTitle": "Upload new avatar",
+        "cancel": "Cancel",
+        "groups": "Group Memberships",
+        "organizedEvents": "Organized Events"
+    },
+    "login": {
+        "title": "Login",
+        "subtitle": "Enter your login credentials.",
+        "email": "Email",
+        "password": "Password",
+        "loading": "Loading...",
+        "submit": "Login",
+        "close": "Close",
+        "error": "Login error"
+    },
+    "register": {
+        "title": "Welcome",
+        "subtitle": "Please register or log in below.",
+        "email": "Email",
+        "password": "Password",
+        "loading": "Loading...",
+        "submit": "Register via email",
+        "close": "Close",
+        "error": "Registration error"
+    }
+}

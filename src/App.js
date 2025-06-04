@@ -1,4 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
+import './i18n';
+import { useTranslation } from 'react-i18next';
 import { AuthProvider } from "./context/AuthContext";
 import { BrowserRouter as Router, Routes, Route, Link, useLocation } from "react-router-dom";
 import { FaHome, FaCalendarAlt, FaComments, FaUserAlt, FaSignInAlt, FaUserPlus, FaSearch, FaBell, FaUser, FaSignOutAlt } from "react-icons/fa";
@@ -10,6 +12,7 @@ import Calendar from "./pages/Calendar";
 import Chat from "./pages/Chat";
 import CreateEvent from "./pages/CreateEvent";
 import EventOverview from "./pages/EventOverview";
+import EventDetails from "./pages/EventDetails";
 import LandingPage from "./pages/LandingPage";
 import RegisterModal from "./components/RegisterModal";
 import LoginModal from "./components/LoginModal";
@@ -50,10 +53,18 @@ export default function App() {
   }, [menuRef]);
 
   function AppContent() {
+    const { t } = useTranslation();
+    const { i18n } = useTranslation();
+    const handleLanguageChange = (e) => {
+      const lang = e.target.value;
+      i18n.changeLanguage(lang);
+      localStorage.setItem('language', lang);
+    };
     const location = useLocation();
     const isTransparentNavbar =
       location.pathname === "/create" ||
-      /^\/events\/[^/]+\/edit$/.test(location.pathname);
+      /^\/events\/[^/]+\/edit$/.test(location.pathname) ||
+      /^\/events\/[^/]+$/.test(location.pathname);
     const currentPath = location.pathname;
     return (
       <>
@@ -65,7 +76,7 @@ export default function App() {
         >
           <header className={`${isTransparentNavbar ? 'bg-gradient-to-b from-white to-transparent' : 'bg-gradient-to-b from-purple-100 to-transparent'} shadow-none`}>
           <div className="max-w-7xl mx-auto px-4 py-2 flex justify-between items-center">
-            <Link to={isAuthenticated ? ("/discover") : ("/")}  className="text-2xl font-bold tracking-tight">ГДЕ?</Link>
+            <Link to={isAuthenticated ? ("/discover") : ("/")}  className="text-2xl font-bold tracking-tight">{t('app.title')}</Link>
 
             {/* Navigation visible on all devices, icons with labels on md and up */}
             <nav className="flex space-x-6">
@@ -76,7 +87,7 @@ export default function App() {
                 }`}
               >
                 <FaHome />
-                <span className="hidden md:inline">Мероприятия</span>
+                <span className="hidden md:inline">{t('nav.events')}</span>
               </Link>
               <Link
                 to="/calendar"
@@ -85,7 +96,7 @@ export default function App() {
                 }`}
               >
                 <FaCalendarAlt />
-                <span className="hidden md:inline">Календарь</span>
+                <span className="hidden md:inline">{t('nav.calendar')}</span>
               </Link>
               {/* <Link
                 to="/chat"
@@ -106,7 +117,7 @@ export default function App() {
                     {new Date().toLocaleTimeString("en-US", { hour: "numeric", minute: "numeric", hour12: false })}
                   </span>
                   <Link to="/create" className="text-sm font-medium hover:underline">
-                    Создать встречу
+                    {t('nav.createEvent')}
                   </Link>
                   <div ref={menuRef} className="relative">
                     <button onClick={() => setMenuOpen(!menuOpen)} className="w-8 h-8 rounded-full overflow-hidden">
@@ -119,10 +130,10 @@ export default function App() {
                           <p className="text-xs text-gray-500">{userEmail}</p>
                         </div>
                         <Link to="/profile" className="block px-4 py-2 hover:bg-gray-100 flex items-center gap-2">
-                          <FaUser /> Профиль
+                          <FaUser /> {t('nav.profile')}
                         </Link>
                         <button onClick={() => { localStorage.removeItem("token"); window.location.reload(); }} className="w-full text-left px-4 py-2 hover:bg-gray-100 flex items-center gap-2">
-                          <FaSignOutAlt /> Выйти
+                          <FaSignOutAlt /> {t('nav.logout')}
                         </button>
                       </div>
                     )}
@@ -131,9 +142,17 @@ export default function App() {
               ) : (
                 <button onClick={() => setShowRegisterModal(true)} className="px-4 py-1 bg-black text-white rounded hover:bg-gray-800 text-sm flex items-center gap-2">
                   <FaUserPlus />
-                  <span className="hidden md:inline">Вход / Регистрация</span>
+                  <span className="hidden md:inline">{t('auth.loginRegister')}</span>
                 </button>
               )}
+                  <select
+                    onChange={handleLanguageChange}
+                    value={i18n.language}
+                    className="text-sm bg-white border rounded px-2 py-1"
+                  >
+                    <option value="ru">🇷🇺</option>
+                    <option value="en">🇺🇸</option>
+                  </select>
             </div>
           </div>
         </header>
@@ -148,7 +167,8 @@ export default function App() {
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/create" element={<CreateEvent />} />
                 <Route path="/events/:id/edit" element={<CreateEvent />} />
-                <Route path="/events/:id" element={<EventOverview />} />
+                <Route path="/events/:id" element={<EventDetails />} />
+                <Route path="/event-overview/:id" element={<EventOverview />} />
               </>
             </Routes>
           </main>

@@ -4,8 +4,10 @@ import { useParams } from "react-router-dom";
 import EventCard from "../components/EventCard";
 import { formatEventDateTime } from '../utils/dateUtils';
 import defaultEventImage from "../assets/invitation.png";
+import { useTranslation } from 'react-i18next';
 
 export default function EventOverview() {
+  const { t } = useTranslation();
   const { id } = useParams();
   const [event, setEvent] = useState(null);
   const [showEditModal, setShowEditModal] = useState(false);
@@ -23,7 +25,7 @@ export default function EventOverview() {
   useEffect(() => {
     apiFetch(`/events/${id}`)
       .then(res => {
-        if (!res.ok) throw new Error("Не удалось загрузить событие");
+        if (!res.ok) throw new Error(t('eventOverview.loadError'));
         return res.json();
       })
       .then(data => {
@@ -38,7 +40,7 @@ export default function EventOverview() {
         });
       })
       .catch(console.error);
-  }, [id]);
+  }, [id, t]);
 
   if (!event) return <div className="p-4">Loading…</div>;
 
@@ -54,7 +56,7 @@ export default function EventOverview() {
             onClick={() => {
               apiFetch(`/events/${id}`)
                 .then(res => {
-                  if (!res.ok) throw new Error("Не удалось загрузить событие");
+                  if (!res.ok) throw new Error(t('eventOverview.loadError'));
                   return res.json();
                 })
                 .then(data => {
@@ -69,27 +71,27 @@ export default function EventOverview() {
                   setShowEditModal(true);
                 })
                 .catch(err => {
-                  alert("Ошибка загрузки данных для редактирования: " + err.message);
+                  alert(t('eventOverview.loadEditError') + ": " + err.message);
                 });
             }}
           >
-            Редактировать мероприятие
+            {t('eventOverview.editButton')}
           </button>
         </div>
 
         {/* Основная информация */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div>
-            <h2 className="text-xl font-semibold">Когда и Где</h2>
+            <h2 className="text-xl font-semibold">{t('eventOverview.whenWhere')}</h2>
             <p className="mt-2">
               {formatEventDateTime(event.start_datetime, event.end_datetime)}
             </p>
             <p className="mt-2">
-              {event.online_link || <span className="italic text-gray-500">Место проведения не указано</span>}
+              {event.online_link || <span className="italic text-gray-500">{t('eventOverview.noLocation')}</span>}
             </p>
           </div>
           <div>
-            <h2 className="text-xl font-semibold">Подробности</h2>
+            <h2 className="text-xl font-semibold">{t('eventOverview.details')}</h2>
             <p className="mt-2">{event.description || "-"}</p>
           </div>
         </div>
@@ -105,21 +107,21 @@ export default function EventOverview() {
                   setShowCopyNotification(true);
                   setTimeout(() => setShowCopyNotification(false), 3000);
                 })
-                .catch(() => alert("Не удалось скопировать ссылку."));
+                .catch(() => alert(t('eventOverview.loadError')));
             }}
           >
-            Поделиться мероприятием
+            {t('eventOverview.share')}
           </button>
           <button
             className="px-4 py-2 bg-red-600 text-white rounded"
             onClick={() => setShowDeletePopup(true)}
           >
-            Удалить мероприятие
+            {t('eventOverview.delete')}
           </button>
         </div>
         {showCopyNotification && (
           <div className="fixed bottom-4 right-4 bg-green-500 text-white px-4 py-2 rounded shadow-lg">
-            Ссылка скопирована!
+            {t('eventOverview.linkCopied')}
           </div>
         )}
       </div>
@@ -127,12 +129,12 @@ export default function EventOverview() {
       {showEditModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-6 rounded shadow max-w-lg w-full">
-            <h2 className="text-xl font-bold mb-4">Редактировать мероприятие</h2>
+            <h2 className="text-xl font-bold mb-4">{t('eventOverview.editTitle')}</h2>
             <div className="flex flex-col space-y-4">
               <input
                 type="text"
                 className="w-full rounded bg-white/30 backdrop-blur-md text-[#1A1A1A] placeholder:text-[#999999] px-3 py-2"
-                placeholder="Введите название события"
+                placeholder={t('eventOverview.titlePlaceholder')}
                 value={editData.title}
                 onChange={(e) => setEditData({ ...editData, title: e.target.value })}
               />
@@ -153,13 +155,13 @@ export default function EventOverview() {
               <input
                 type="text"
                 className="w-full rounded bg-white/30 backdrop-blur-md text-[#1A1A1A] placeholder:text-[#999999] px-3 py-2"
-                placeholder="Офлайн место или ссылка для онлайн"
+                placeholder={t('eventOverview.locationPlaceholder')}
                 value={editData.online_link}
                 onChange={(e) => setEditData({ ...editData, online_link: e.target.value })}
               />
               <textarea
                 className="w-full rounded bg-white/30 backdrop-blur-md text-[#1A1A1A] placeholder:text-[#999999] px-3 py-2"
-                placeholder="Дополнительная информация"
+                placeholder={t('eventOverview.descriptionPlaceholder')}
                 value={editData.description}
                 onChange={(e) => setEditData({ ...editData, description: e.target.value })}
               />
@@ -168,8 +170,8 @@ export default function EventOverview() {
                 value={editData.visibility}
                 onChange={(e) => setEditData({ ...editData, visibility: e.target.value })}
               >
-                <option value="public">🌐 Публичное</option>
-                <option value="private">✨ Приватное</option>
+                <option value="public">{t('eventOverview.public')}</option>
+                <option value="private">{t('eventOverview.private')}</option>
               </select>
             </div>
             <div className="flex justify-end space-x-2 mt-4">
@@ -182,7 +184,7 @@ export default function EventOverview() {
                     body: JSON.stringify(editData)
                   })
                     .then(res => {
-                      if (!res.ok) throw new Error("Ошибка обновления мероприятия");
+                      if (!res.ok) throw new Error(t('eventOverview.loadError'));
                       return res.json();
                     })
                     .then(updatedEvent => {
@@ -192,13 +194,13 @@ export default function EventOverview() {
                     .catch(err => alert(err.message));
                 }}
               >
-                Сохранить
+                {t('eventOverview.save')}
               </button>
               <button
                 className="px-4 py-2 bg-gray-300 rounded"
                 onClick={() => setShowEditModal(false)}
               >
-                Отмена
+                {t('eventOverview.cancel')}
               </button>
             </div>
           </div>
@@ -207,24 +209,24 @@ export default function EventOverview() {
       {showDeletePopup && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-6 rounded shadow max-w-sm w-full">
-            <h2 className="text-xl font-bold mb-4 text-red-600">Подтвердите удаление</h2>
-            <p>Вы уверены, что хотите удалить это мероприятие?</p>
+            <h2 className="text-xl font-bold mb-4 text-red-600">{t('eventOverview.confirmDeleteTitle')}</h2>
+            <p>{t('eventOverview.confirmDeleteBody')}</p>
             <div className="flex justify-end space-x-2 mt-4">
               <button
                 className="px-4 py-2 bg-red-500 text-white rounded"
                 onClick={() => {
                   apiFetch(`/events/${id}`, { method: 'DELETE' })
                     .then(() => window.location.href = "/")
-                    .catch(err => alert("Ошибка удаления мероприятия"));
+                    .catch(err => alert(t('eventOverview.deleteError')));
                 }}
               >
-                Удалить
+                {t('eventOverview.delete')}
               </button>
               <button
                 className="px-4 py-2 bg-gray-300 rounded"
                 onClick={() => setShowDeletePopup(false)}
               >
-                Отмена
+                {t('eventOverview.cancel')}
               </button>
             </div>
           </div>

@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { apiFetch } from "../api";
 
 export default function LoginModal({ onClose }) {
+  const { t } = useTranslation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
@@ -68,7 +70,7 @@ export default function LoginModal({ onClose }) {
         window.location.reload();
       } else {
         const err = await response.json();
-        setError(err.detail || "Ошибка входа");
+        setError(err.detail || t('login.error'));
       }
     } catch (e) {
       setError(e.message);
@@ -85,19 +87,19 @@ export default function LoginModal({ onClose }) {
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 transition-all duration-300 opacity-0 scale-95 animate-fadeScaleIn">
       <div className="bg-white rounded-lg shadow-lg p-6 w-96">
-        <h2 className="text-xl font-semibold mb-2">Вход</h2>
-        <p className="mb-4 text-sm text-gray-600">Введите ваши данные для входа.</p>
+        <h2 className="text-xl font-semibold mb-2">{t('login.title')}</h2>
+        <p className="mb-4 text-sm text-gray-600">{t('login.subtitle')}</p>
         <form onSubmit={handleSubmit}>
           <input
             type="email"
-            placeholder="Email"
+            placeholder={t('login.email')}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className="w-full border px-3 py-2 mb-3 rounded"
           />
           <input
             type="password"
-            placeholder="Пароль"
+            placeholder={t('login.password')}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             className="w-full border px-3 py-2 mb-3 rounded"
@@ -108,7 +110,7 @@ export default function LoginModal({ onClose }) {
             disabled={loading}
             className="w-full bg-black text-white py-2 rounded mb-3 disabled:opacity-50"
           >
-            {loading ? "Загрузка..." : "Войти"}
+            {loading ? t('login.loading') : t('login.submit')}
           </button>
         </form>
         <div id="telegram-login-button" className="w-full mt-3 flex items-center justify-center"></div>
@@ -116,7 +118,7 @@ export default function LoginModal({ onClose }) {
           onClick={onClose}
           className="mt-2 text-sm text-gray-500 underline"
         >
-          Закрыть
+          {t('login.close')}
         </button>
       </div>
     </div>

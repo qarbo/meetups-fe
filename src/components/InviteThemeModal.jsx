@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
+import { fonts } from "../utils/constants"
 
 export default function InviteThemeModal({ themes, selectedTheme, setSelectedTheme, selectedColorScheme, onClose, onColorChange, onThemeChange, colorOptions, onFontChange, selectedEmoji, setSelectedEmoji }) {
   const colors = [
@@ -12,16 +13,6 @@ export default function InviteThemeModal({ themes, selectedTheme, setSelectedThe
     { id: "orange", color: "bg-orange-500" },
     { id: "red", color: "bg-red-500" },
     { id: "rainbow", color: "bg-gradient-to-r from-pink-500 via-yellow-500 to-blue-500" },
-  ];
-  const fonts = [
-    { id: "default", name: "Default", style: "font-sans" },
-    { id: "roboto", name: "Roboto", style: "font-roboto" },
-    { id: "open-sans", name: "Open Sans", style: "font-open-sans" },
-    { id: "pt-sans", name: "PT Sans", style: "font-pt-sans" },
-    { id: "montserrat", name: "Montserrat", style: "font-montserrat" },
-    { id: "noto-sans", name: "Noto Sans", style: "font-noto-sans" },
-    { id: "lato", name: "Lato", style: "font-lato" },
-    { id: "arial", name: "Arial", style: "font-arial" },
   ];
   const [selectedFont, setSelectedFont] = useState(fonts[0].id);
   const [colorScheme, setColorScheme] = useState("light");
@@ -141,7 +132,7 @@ export default function InviteThemeModal({ themes, selectedTheme, setSelectedThe
               {fonts.find(f => f.id === selectedFont)?.name}
             </button>
             {showFontPicker && (
-              <div className="absolute z-50 bottom-full mb-2 bg-white rounded-lg shadow-md p-2 grid grid-cols-4 gap-2 min-w-[20rem] max-w-[20rem]">
+              <div className="absolute z-50 bottom-full left-1/2 -translate-x-1/2 mb-2 bg-white rounded-lg shadow-md p-2 grid grid-cols-4 gap-2 w-max max-w-[90vw] max-h-[300px] overflow-y-auto">
                 {fonts.map((font) => (
                   <div
                     key={font.id}

@@ -1,10 +1,12 @@
 // src/pages/LandingPage.jsx
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import landingImage from "../assets/LandingImage.png";
 
 export default function LandingPage() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   useEffect(() => {
     const canvas = document.getElementById("landing-canvas");
@@ -45,23 +47,23 @@ export default function LandingPage() {
       <div className="relative z-10 flex flex-col md:flex-row items-center justify-center h-screen text-center md:text-left gap-8 px-6 md:px-24 py-6 md:py-12">
         <div className="md:w-1/2 order-1 md:order-1">
           <h1 className="text-3xl font-bold mb-4">
-            Незабываемые события <span className="text-pink-500">начинаются здесь.</span>
+            {t('landing.title.part1')} <span className="text-pink-500">{t('landing.title.part2')}</span>
           </h1>
           <p className="text-m mb-6">
-            Создайте страницу мероприятия, пригласите друзей и продавайте билеты. Проведите незабываемое событие уже сегодня.
+            {t('landing.description')}
           </p>
           <button
             onClick={() => navigate('/create')}
             className="bg-black text-white px-6 py-3 rounded hover:bg-gray-800"
           >
-            Создать первое мероприятие
+            {t('landing.createButton')}
           </button>
         </div>
         <div className="md:w-1/2 order-2 md:order-2">
           <img
             src={landingImage}
             alt="event preview"
-            className="mx-auto md:w-full max-h-screen rounded"
+            className="mx-auto md:w-3/4 max-h-screen rounded"
           />
         </div>
       </div>

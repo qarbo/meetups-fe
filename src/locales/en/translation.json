@@ -121,5 +121,13 @@
         "submit": "Register via email",
         "close": "Close",
         "error": "Registration error"
+    },
+    "inviteTheme": {
+        "title": "Choose invitation theme",
+        "pickColor": "Pick a color",
+        "disabled": "Selection unavailable",
+        "choose": "Choose",
+        "light": "☀️ Light theme",
+        "dark": "🌙 Dark theme"
     }
 }

@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { fonts } from "../utils/constants"
+import { useTranslation } from "react-i18next";
 
 export default function InviteThemeModal({ themes, selectedTheme, setSelectedTheme, selectedColorScheme, onClose, onColorChange, onThemeChange, colorOptions, onFontChange, selectedEmoji, setSelectedEmoji }) {
+  const { t } = useTranslation();
   const colors = [
     { id: "gray", color: "bg-gray-500" },
     { id: "pink", color: "bg-pink-500" },
@@ -75,7 +77,7 @@ export default function InviteThemeModal({ themes, selectedTheme, setSelectedThe
         className={`relative ${colorScheme === "light" ? "text-[#1A1A1A]" : "text-white"} backdrop-blur-md bg-white/10 rounded-t-lg p-6 max-w-3xl w-full shadow`}
         onClick={(e) => e.stopPropagation()}
       >
-        <h2 className="text-lg font-bold mb-4">Выберите тему приглашения</h2>
+        <h2 className="text-lg font-bold mb-4">{t('inviteTheme.title')}</h2>
         <div className="flex justify-center items-center gap-4 flex-wrap">
           {themes.map((theme) => (
             <div
@@ -99,7 +101,7 @@ export default function InviteThemeModal({ themes, selectedTheme, setSelectedThe
               className="w-full h-12 rounded bg-white/30 backdrop-blur-md text-sm shadow flex items-center gap-2 justify-center"
             >
               <div className={`w-4 h-4 rounded-full ${colors.find(c => c.id === selectedColor)?.color}`}></div>
-              Выбрать цвет
+              {t('inviteTheme.pickColor')}
             </button>
             {showColorPicker && (
               <div className="absolute z-50 bottom-full mb-2 bg-white rounded-lg shadow-md p-2 grid grid-cols-9 gap-2 min-w-[20rem] max-w-[20rem]">
@@ -171,12 +173,12 @@ export default function InviteThemeModal({ themes, selectedTheme, setSelectedThe
               }}
             >
               {selectedTheme === "minimal"
-                ? "Выбор недоступен"
+                ? t('inviteTheme.disabled')
                 : selectedTheme === "emoji"
                 ? selectedEmoji
                 : selectedTheme === "pattern"
                 ? selectedPattern
-                : "Выбрать"}
+                : t('inviteTheme.choose')}
             </button>
             {selectedTheme === "emoji" && showEmojiPicker && (
               <div ref={emojiPickerRef} className="absolute z-50 bottom-full mb-2 bg-white rounded-lg shadow-md p-2 grid grid-cols-6 gap-2 min-w-[20rem] max-w-[20rem]">
@@ -224,7 +226,7 @@ export default function InviteThemeModal({ themes, selectedTheme, setSelectedThe
             }}
             className="w-full h-12 rounded bg-white/30 backdrop-blur-md text-sm shadow flex items-center gap-2 justify-center"
           >
-            {colorScheme === "light" ? "☀️ Светлая тема" : "🌙 Тёмная тема"}
+            {colorScheme === "light" ? t('inviteTheme.light') : t('inviteTheme.dark')}
           </button>
         </div>
         <button

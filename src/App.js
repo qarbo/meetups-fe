@@ -152,6 +152,7 @@ export default function App() {
                   >
                     <option value="ru">🇷🇺</option>
                     <option value="en">🇺🇸</option>
+                    <option value="uz">🇺🇿</option>
                   </select>
             </div>
           </div>

@@ -1,0 +1,125 @@
+{
+  "app": {
+    "title": "QAYERDA?"
+  },
+  "nav": {
+    "events": "Tadbirlar",
+    "calendar": "Kalendar",
+    "createEvent": "Uchrashuv yaratish",
+    "profile": "Profil",
+    "logout": "Chiqish"
+  },
+  "auth": {
+    "loginRegister": "Kirish / Ro'yxatdan o'tish"
+  },
+  "home": {
+    "title": "Moskva shahrida nimalar bo‘lyapti",
+    "today": "Bugun",
+    "weekdays": ["yakshanba", "dushanba", "seshanba", "chorshanba", "payshanba", "juma", "shanba"],
+    "organizer": "Tashkilotchi",
+    "city": "Moskva",
+    "subscribeDescription": "Moskva shahridagi eng yaxshi tadbirlardan xabardor bo‘ling.",
+    "subscribed": "Obuna bo‘lindi"
+  },
+  "landing": {
+    "title": {
+      "part1": "Unutilmas tadbirlar",
+      "part2": "shu yerdan boshlanadi."
+    },
+    "description": "Tadbir sahifasini yarating, do‘stlarni taklif qiling va chiptalarni soting. Unutilmas tadbirni bugunoq tashkil qiling.",
+    "createButton": "Birinchi tadbirni yaratish"
+  },
+  "createEvent": {
+    "pageTitle": "Uchrashuv yaratish",
+    "titlePlaceholder": "Tadbir nomini kiriting",
+    "startLabel": "Boshlanish",
+    "endLabel": "Tugash",
+    "locationPlaceholder": "Ofis manzili yoki onlayn havola",
+    "descriptionPlaceholder": "Qo‘shimcha ma’lumot",
+    "ticketsLabel": "Chiptalar",
+    "tickets": {
+      "free": "Bepul",
+      "paid": "Pullik"
+    },
+    "approvalLabel": "Tasdiqlash talab qilinadi",
+    "capacityLabel": "Sig‘im",
+    "capacityPlaceholder": "Cheklanmagan",
+    "submitButton": "Tadbir yaratish",
+    "selectTheme": "Taklif mavzusini tanlang",
+    "visibility": {
+      "public": "Ochiq",
+      "private": "Yopiq",
+      "publicDescription": "Kalendar orqali ko‘rinadi va ajratib ko‘rsatiladi.",
+      "privateDescription": "Kalendar orqali ko‘rinmaydi. Faqat havola orqali mavjud."
+    }
+  },
+  "eventDetails": {
+    "loading": "Yuklanmoqda...",
+    "metaDescription": "{{date}} sanasida tadbir",
+    "time": "Vaqt",
+    "registration": "Ro‘yxatdan o‘tish",
+    "registerPrompt": "Xush kelibsiz! Tadbirga qo‘shilish uchun ro‘yxatdan o‘ting.",
+    "registerButton": "Ro‘yxatdan o‘tish",
+    "loginRegister": "Kirish / Ro‘yxatdan o‘tish"
+  },
+  "eventOverview": {
+    "loadError": "Tadbirni yuklab bo‘lmadi",
+    "loadEditError": "Tahrirlash uchun ma’lumotlarni yuklab bo‘lmadi",
+    "editButton": "Tadbirni tahrirlash",
+    "whenWhere": "Qachon va Qayerda",
+    "noLocation": "Manzil ko‘rsatilmagan",
+    "details": "Batafsil",
+    "share": "Tadbir ulashish",
+    "delete": "Tadbirni o‘chirish",
+    "linkCopied": "Havola nusxalandi!",
+    "editTitle": "Tadbirni tahrirlash",
+    "titlePlaceholder": "Tadbir nomini kiriting",
+    "locationPlaceholder": "Ofis manzili yoki onlayn havola",
+    "descriptionPlaceholder": "Qo‘shimcha ma’lumot",
+    "public": "🌐 Ochiq",
+    "private": "✨ Yopiq",
+    "save": "Saqlash",
+    "cancel": "Bekor qilish",
+    "confirmDeleteTitle": "O‘chirishni tasdiqlang",
+    "confirmDeleteBody": "Bu tadbirni o‘chirmoqchimisiz?",
+    "deleteError": "Tadbirni o‘chirishda xatolik"
+  },
+  "profile": {
+    "loading": "Profil yuklanmoqda...",
+    "error": "Xatolik",
+    "title": "Profil",
+    "changeAvatar": "O‘zgartirish",
+    "uploadTitle": "Yangi avatar yuklash",
+    "cancel": "Bekor qilish",
+    "groups": "Guruh a’zoligi",
+    "organizedEvents": "Tashkil etilgan tadbirlar"
+  },
+  "login": {
+    "title": "Kirish",
+    "subtitle": "Kirish uchun ma’lumotlaringizni kiriting.",
+    "email": "Email",
+    "password": "Parol",
+    "loading": "Yuklanmoqda...",
+    "submit": "Kirish",
+    "close": "Yopish",
+    "error": "Kirishda xatolik"
+  },
+  "register": {
+    "title": "Xush kelibsiz",
+    "subtitle": "Iltimos, quyida ro‘yxatdan o‘ting yoki kiring.",
+    "email": "Email",
+    "password": "Parol",
+    "loading": "Yuklanmoqda...",
+    "submit": "Email orqali ro‘yxatdan o‘tish",
+    "close": "Yopish",
+    "error": "Ro‘yxatdan o‘tishda xatolik"
+  },
+  "inviteTheme": {
+    "title": "Taklif mavzusini tanlang",
+    "pickColor": "Rang tanlash",
+    "disabled": "Tanlash mumkin emas",
+    "choose": "Tanlash",
+    "light": "☀️ Yorug‘ mavzu",
+    "dark": "🌙 Qorong‘i mavzu"
+  }
+}

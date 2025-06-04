@@ -68,7 +68,9 @@
         "registration": "Registration",
         "registerPrompt": "Welcome! To join the event, please register below.",
         "registerButton": "Register",
-        "loginRegister": "Login / Register"
+        "loginRegister": "Login / Register",
+        "alreadyRegistered": "You are successfully registered",
+        "pendingApproval": "Pending confirmation"
     },
     "eventOverview": {
         "loadError": "Failed to load event",

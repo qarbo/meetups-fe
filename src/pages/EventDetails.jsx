@@ -13,6 +13,8 @@ export default function ViewEvent() {
   const { t } = useTranslation();
   const { id } = useParams();
   const [eventData, setEventData] = useState(null);
+  const [registrationStatus, setRegistrationStatus] = useState(null);
+  const [registrationError, setRegistrationError] = useState(null);
   const { user, isAuthenticated, setShowLogin } = useUser();
 
   useEffect(() => {
@@ -21,12 +23,45 @@ export default function ViewEvent() {
       if (res.ok) {
         const data = await res.json();
         setEventData(data);
+        if (isAuthenticated) {
+          try {
+            const statusRes = await apiFetch(`/events/${id}/status`);
+            if (statusRes.ok) {
+              const statusData = await statusRes.json();
+              setRegistrationStatus(statusData.status);  // "confirmed" | "pending" | etc.
+            } else if (statusRes.status === 404) {
+              setRegistrationStatus("not_registered");
+            }
+          } catch (e) {
+            console.error("Failed to fetch registration status", e);
+          }
+        }
       }
     }
     fetchEvent();
-  }, [id]);
+  }, [id, isAuthenticated]);
 
   if (!eventData) return <div className="text-center py-10">{t('eventDetails.loading')}</div>;
+
+  async function handleRegister() {
+    try {
+      const res = await apiFetch(`/events/${id}/register`, {
+        method: 'POST',
+      });
+      if (res.ok) {
+        const statusRes = await apiFetch(`/events/${id}/status`);
+        if (statusRes.ok) {
+          const statusData = await statusRes.json();
+          setRegistrationStatus(statusData.status);
+        }
+      } else {
+        setRegistrationError(t('eventDetails.registrationFailed'));
+      }
+    } catch (error) {
+      alert(t('eventDetails.registrationError'));
+      console.error(error);
+    }
+  }
 
   const {
     title,
@@ -97,7 +132,7 @@ export default function ViewEvent() {
                   {new Date(start_datetime).getDate()}
                 </div>
               </div>
-              <p className={`${font}`}>{t('eventDetails.time')}: {formatEventDateTime(start_datetime, end_datetime)}</p>
+              <p className={`${font}`}>{formatEventDateTime(start_datetime, end_datetime)}</p>
             </div>
             <div className="flex items-center gap-3">
               <div className="flex items-center justify-center w-12 h-12 rounded-lg bg-white/50 text-[#1A1A1A] backdrop-blur-sm  border border-white/40">
@@ -121,9 +156,23 @@ export default function ViewEvent() {
                     <span className="font-semibold">{user?.name}</span>
                     <span className="text-sm opacity-70">{user?.email}</span>
                   </div>
-                  <button className="w-full bg-white text-[#1A1A1A] py-2 rounded shadow-sm hover:bg-[#EEE] transition">
-                    {t('eventDetails.registerButton')}
-                  </button>
+                  {registrationError && (
+                    <div className="text-red-600 font-semibold mb-2">{registrationError}</div>
+                  )}
+                  {registrationStatus === "confirmed" && (
+                    <div className="text-green-600 font-semibold">{t('eventDetails.alreadyRegistered')}</div>
+                  )}
+                  {registrationStatus === "pending" && (
+                    <div className="text-yellow-600 font-semibold">{t('eventDetails.pendingApproval')}</div>
+                  )}
+                  {registrationStatus === "not_registered" && (
+                    <button
+                      onClick={handleRegister}
+                      className="w-full bg-white text-[#1A1A1A] py-2 rounded shadow-sm hover:bg-[#EEE] transition"
+                    >
+                      {t('eventDetails.registerButton')}
+                    </button>
+                  )}
                 </>
               ) : (
                 <button

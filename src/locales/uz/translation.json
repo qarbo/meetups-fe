@@ -60,7 +60,9 @@
     "registration": "Ro‘yxatdan o‘tish",
     "registerPrompt": "Xush kelibsiz! Tadbirga qo‘shilish uchun ro‘yxatdan o‘ting.",
     "registerButton": "Ro‘yxatdan o‘tish",
-    "loginRegister": "Kirish / Ro‘yxatdan o‘tish"
+    "loginRegister": "Kirish / Ro‘yxatdan o‘tish",
+    "alreadyRegistered": "Siz muvaffaqiyatli ro‘yxatdan o‘tdingiz",
+    "pendingApproval": "Tasdiqlanishi kutilmoqda"
   },
   "eventOverview": {
     "loadError": "Tadbirni yuklab bo‘lmadi",

@@ -24,7 +24,7 @@ export default function EventCalendar() {
   const events = exampleEvents[formatDate(selectedDate)] || [];
 
   return (
-    <div className="max-w-3xl mx-auto relative">
+    <div className="max-w-3xl mx-auto px-4 relative">
       <h2 className="text-2xl font-bold mb-4">Календарь мероприятий</h2>
 
       <Calendar

@@ -102,7 +102,8 @@
         "uploadTitle": "Upload new avatar",
         "cancel": "Cancel",
         "groups": "Group Memberships",
-        "organizedEvents": "Organized Events"
+        "organizedEvents": "Organized Events",
+        "noEvents": "No organized events"
     },
     "login": {
         "title": "Login",

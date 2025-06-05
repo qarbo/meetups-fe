@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
 import { apiFetch } from "../api";
+import defaultEventImage from "../assets/invitation.png";
 
 export default function Profile() {
   const { t } = useTranslation();
@@ -8,6 +10,30 @@ export default function Profile() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showUpload, setShowUpload] = useState(false);
+  const [events, setEvents] = useState([]);
+
+  // Format date/time for events
+  function formatEventDateTime(start, end) {
+    if (!start) return "";
+    const startDate = new Date(start);
+    const endDate = end ? new Date(end) : null;
+    const optionsDate = { day: "2-digit", month: "2-digit", year: "numeric" };
+    const optionsTime = { hour: "2-digit", minute: "2-digit" };
+    let str = startDate.toLocaleDateString(undefined, optionsDate) + " " + startDate.toLocaleTimeString(undefined, optionsTime);
+    if (endDate) {
+      // Если дата окончания совпадает с датой начала, показать только время окончания
+      if (
+        startDate.getFullYear() === endDate.getFullYear() &&
+        startDate.getMonth() === endDate.getMonth() &&
+        startDate.getDate() === endDate.getDate()
+      ) {
+        str += " — " + endDate.toLocaleTimeString(undefined, optionsTime);
+      } else {
+        str += " — " + endDate.toLocaleDateString(undefined, optionsDate) + " " + endDate.toLocaleTimeString(undefined, optionsTime);
+      }
+    }
+    return str;
+  }
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -29,7 +55,16 @@ export default function Profile() {
         }
         return res.json();
       })
-      .then(data => setUser(data))
+      .then(data => {
+        setUser(data);
+        apiFetch("/me/events")
+          .then(res => {
+            if (!res.ok) throw new Error("Failed to fetch events");
+            return res.json();
+          })
+          .then(data => setEvents(data))
+          .catch(err => console.error("Error loading events:", err));
+      })
       .catch(err => setError(err.message))
       .finally(() => setLoading(false));
   }, []);
@@ -42,7 +77,7 @@ export default function Profile() {
   }
 
   return (
-    <div className="max-w-3xl mx-auto">
+    <div className="max-w-3xl mx-auto px-4">
       <h2 className="text-2xl font-bold mb-6">{t('profile.title')}</h2>
 
       {/* Профиль пользователя */}
@@ -123,16 +158,38 @@ export default function Profile() {
       {/* Мероприятия */}
       <div>
         <h4 className="text-lg font-semibold mb-2">{t('profile.organizedEvents')}</h4>
-        {/* <ul className="space-y-3">
-          {user.events.map((event, idx) => (
-            <li key={idx} className="bg-white p-4 rounded shadow">
-              <p className="font-medium">{event.title}</p>
-              <p className="text-sm text-gray-600">
-                {event.date} — {event.location}
-              </p>
-            </li>
-          ))}
-        </ul> */}
+        {events.length === 0 ? (
+          <p className="text-gray-500">{t('profile.noEvents')}</p>
+        ) : (
+          <ul className="space-y-3">
+            {events.map((event) => (
+              <Link
+                key={event.id}
+                to={`/event-overview/${event.id}`}
+                className="block"
+              >
+                <div className="bg-white rounded-lg p-4 flex items-start justify-between gap-4 shadow-sm hover:shadow transition">
+                  <div className="flex-1 min-w-0">
+                    <div className="text-sm text-gray-400 flex items-center gap-1">
+                      <span role="img" aria-label="Календарь">📅</span>
+                      {formatEventDateTime(event.start_datetime, event.end_datetime)}
+                    </div>
+                    <h2 className="text-lg font-semibold mb-1 truncate">{event.title}</h2>
+                    <div className="flex items-center gap-2 text-sm text-gray-500">
+                      <span role="img" aria-label="Локация">📍</span>
+                      <span className="truncate">{event.online_link}</span>
+                    </div>
+                  </div>
+                  <img
+                    src={event.cover_image_url || defaultEventImage}
+                    alt={event.title}
+                    className="w-24 h-24 rounded-lg object-cover flex-shrink-0"
+                  />
+                </div>
+              </Link>
+            ))}
+          </ul>
+        )}
       </div>
     </div>
   );

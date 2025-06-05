@@ -94,7 +94,8 @@
     "uploadTitle": "Yangi avatar yuklash",
     "cancel": "Bekor qilish",
     "groups": "Guruh a’zoligi",
-    "organizedEvents": "Tashkil etilgan tadbirlar"
+    "organizedEvents": "Tashkil etilgan tadbirlar",
+    "noEvents": "Tashkil etilgan tadbirlar yo‘q"
   },
   "login": {
     "title": "Kirish",

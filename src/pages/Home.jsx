@@ -74,18 +74,18 @@ export default function Home() {
                   to={`/events/${event.id}`}
                   className="block"
                 >
-                  <div className="bg-white rounded-lg p-4 flex items-start justify-between gap-4 shadow-sm hover:shadow transition">
+                  <div className="bg-white rounded-lg p-3 flex items-start justify-between gap-4 shadow-sm hover:shadow transition">
                     <div className="flex-1 min-w-0">
-                      <div className="text-sm text-gray-400 flex items-center gap-1">
+                      <div className="text-xs text-gray-400 mb-1 flex items-center gap-1">
                         <span role="img" aria-label="Календарь">📅</span>
                         {formatEventDateTime(event.start_datetime, event.end_datetime)}
                       </div>
-                      <h2 className="text-lg font-semibold mb-1 truncate">{event.title}</h2>
-                      <div className="flex items-center gap-2 text-sm text-gray-500 mb-1">
+                      <h2 className="text-sm font-semibold mb-1 truncate">{event.title}</h2>
+                      <div className="flex items-center gap-2 text-xs text-gray-500 mb-1">
                         <span role="img" aria-label="Организатор">👤</span>
                         <span>{t('home.organizer')}: {event.organizer.name}</span>
                       </div>
-                      <div className="flex items-center gap-2 text-sm text-gray-500">
+                      <div className="flex items-center gap-2 text-xs text-gray-500">
                         <span role="img" aria-label="Локация">📍</span>
                         <span className="truncate">{event.online_link}</span>
                       </div>

@@ -216,7 +216,7 @@ export default function EventOverview() {
                 className="px-4 py-2 bg-red-500 text-white rounded"
                 onClick={() => {
                   apiFetch(`/events/${id}`, { method: 'DELETE' })
-                    .then(() => window.location.href = "/")
+                    .then(() => window.location.href = "/profile")
                     .catch(err => alert(t('eventOverview.deleteError')));
                 }}
               >

@@ -103,7 +103,9 @@
         "cancel": "Cancel",
         "groups": "Group Memberships",
         "organizedEvents": "Organized Events",
-        "noEvents": "No organized events"
+        "noEvents": "No organized events",
+        "editInfo": "Edit Information",
+        "save": "Save"
     },
     "login": {
         "title": "Login",

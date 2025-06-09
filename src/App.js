@@ -25,6 +25,7 @@ export default function App() {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [userName, setUserName] = useState("");
   const [userEmail, setUserEmail] = useState("");
+  const [userAvatar, setUserAvatar] = useState("");
   const menuRef = useRef(null);
 
   useEffect(() => {
@@ -38,6 +39,7 @@ export default function App() {
         .then(data => {
           setUserName(data.name || "Без имени");
           setUserEmail(data.email || "");
+          setUserAvatar(data.avatar_url || "https://cdn-icons-png.freepik.com/512/6858/6858441.png");
         });
     }
   }, []);
@@ -121,7 +123,7 @@ export default function App() {
                   </Link>
                   <div ref={menuRef} className="relative">
                     <button onClick={() => setMenuOpen(!menuOpen)} className="w-8 h-8 rounded-full overflow-hidden">
-                      <img src="https://cdn-icons-png.freepik.com/512/6858/6858441.png" alt="User" />
+                      <img src={userAvatar} alt="User" />
                     </button>
                     {menuOpen && (
                       <div className="absolute right-0 top-full mt-1 w-48 bg-white rounded-lg shadow-lg py-2 text-left z-50">

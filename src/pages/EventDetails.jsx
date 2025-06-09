@@ -101,91 +101,93 @@ export default function ViewEvent() {
         <meta property="og:url" content={window.location.href} />
       </Helmet>
       <div style={{ position: "relative" }}>
-      <CanvasTheme
-        selectedTheme={themeSettings.theme}
-        selectedEmoji={emoji}
-        canvasColor={canvasColor}
-        colorScheme={colorScheme}
-      />
-      <div className={`min-h-screen px-6 pb-6 ${colorScheme === "light" ? "text-[#1A1A1A]" : "text-white"}`}>
-        <div className="max-w-5xl mx-auto rounded-xl p-1 flex flex-col lg:flex-row gap-6 items-start">
-          <div className="w-full lg:w-1/2 flex justify-center">
-            <div className="w-full max-w-md">
-              <div className="relative w-4/5 sm:w-full mx-auto">
-                <img
-                  src={cover_image_url || defaultEventImage}
-                  alt="preview"
-                  className="w-full aspect-square object-cover rounded shadow-sm"
-                />
-              </div>
-            </div>
-          </div>
-          <div className="flex-1 space-y-3 w-full flex flex-col items-start lg:items-stretch">
-            <h1 className={`text-2xl font-bold ${font}`}>{title}</h1>
-            <p className={`${font}`}>{description}</p>
-            <div className="flex items-center gap-3">
-              <div className="flex flex-col items-center justify-start w-12 h-12 rounded-lg shadow bg-white/50 border border-white/40 backdrop-blur-sm overflow-hidden">
-                <div className="w-full bg-white/20 text-center text-xs py-1 tracking-wide backdrop-blur-sm">
-                  {new Date(start_datetime).toLocaleString("ru-RU", { month: "short" })}
-                </div>
-                <div className="flex-1 flex items-center justify-center text-sm font-semibold">
-                  {new Date(start_datetime).getDate()}
+        <CanvasTheme
+          selectedTheme={themeSettings.theme}
+          selectedEmoji={emoji}
+          canvasColor={canvasColor}
+          colorScheme={colorScheme}
+        />
+        <div className={`min-h-screen px-3 pb-6 ${colorScheme === "light" ? "text-[#1A1A1A]" : "text-white"}`}>
+          <div className="max-w-5xl mx-auto rounded-xl p-1 flex flex-col lg:flex-row gap-6 items-start">
+            <div className="w-full lg:w-1/2 flex justify-center">
+              <div className="w-full max-w-md">
+                <div className="relative w-4/5 sm:w-full mx-auto">
+                  <img
+                    src={cover_image_url || defaultEventImage}
+                    alt="preview"
+                    className="w-full aspect-square object-cover rounded shadow-sm"
+                  />
                 </div>
               </div>
-              <p className={`${font}`}>{formatEventDateTime(start_datetime, end_datetime)}</p>
             </div>
-            <div className="flex items-center gap-3">
-              <div className="flex items-center justify-center w-12 h-12 rounded-lg bg-white/50 text-[#1A1A1A] backdrop-blur-sm  border border-white/40">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" className={`w-8 h-8 ${colorScheme === "light" ? "text-black" : "text-white"}`} fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M2 6.854C2 11.02 7.04 15 8 15s6-3.98 6-8.146C14 3.621 11.314 1 8 1S2 3.62 2 6.854" />
-                  <path d="M9.5 6.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0" />
-                </svg>
-              </div>
-              <p className={`${font}`}>{online_link}</p>
-            </div>
-            <div className="w-full bg-white/50 backdrop-blur-sm rounded-lg p-4 border border-white/30">
-              <div className="text-sm font-mono mb-2 opacity-80">{t('eventDetails.registration')}</div>
-              <div className="text-base mb-2">{t('eventDetails.registerPrompt')}</div>
-              {isAuthenticated ? (
-                <>
-                  <div className="flex items-center gap-2 mb-4">
-                    <img
-                      src={user?.avatar_url || "/default-avatar.png"}
-                      className="w-6 h-6 rounded-full"
-                    />
-                    <span className="font-semibold">{user?.name}</span>
-                    <span className="text-sm opacity-70">{user?.email}</span>
+            <div className="backdrop-blur-md bg-white/10 dark:bg-black/30 rounded-xl p-3 shadow-lg">
+              <div className="flex-1 space-y-3 w-full flex flex-col items-start lg:items-stretch">
+                <h1 className={`text-2xl font-bold ${font}`}>{title}</h1>
+                <p className={`${font}`}>{description}</p>
+                <div className="flex items-center gap-3">
+                  <div className="flex flex-col items-center justify-start w-12 h-12 rounded-lg shadow bg-white/50 border border-white/40 backdrop-blur-sm overflow-hidden">
+                    <div className="w-full bg-white/20 text-center text-xs py-1 tracking-wide backdrop-blur-sm">
+                      {new Date(start_datetime).toLocaleString("ru-RU", { month: "short" })}
+                    </div>
+                    <div className="flex-1 flex items-center justify-center text-sm font-semibold">
+                      {new Date(start_datetime).getDate()}
+                    </div>
                   </div>
-                  {registrationError && (
-                    <div className="text-red-600 font-semibold mb-2">{registrationError}</div>
-                  )}
-                  {registrationStatus === "confirmed" && (
-                    <div className="text-green-600 font-semibold">{t('eventDetails.alreadyRegistered')}</div>
-                  )}
-                  {registrationStatus === "pending" && (
-                    <div className="text-yellow-600 font-semibold">{t('eventDetails.pendingApproval')}</div>
-                  )}
-                  {registrationStatus === "not_registered" && (
+                  <p className={`${font}`}>{formatEventDateTime(start_datetime, end_datetime)}</p>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="flex items-center justify-center w-12 h-12 rounded-lg bg-white/50 text-[#1A1A1A] backdrop-blur-sm  border border-white/40">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" className={`w-8 h-8 ${colorScheme === "light" ? "text-black" : "text-white"}`} fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M2 6.854C2 11.02 7.04 15 8 15s6-3.98 6-8.146C14 3.621 11.314 1 8 1S2 3.62 2 6.854" />
+                      <path d="M9.5 6.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0" />
+                    </svg>
+                  </div>
+                  <p className={`${font}`}>{online_link}</p>
+                </div>
+                <div className="w-full bg-white/50 backdrop-blur-sm rounded-lg p-4 border border-white/30">
+                  <div className="text-sm font-mono mb-2 opacity-80">{t('eventDetails.registration')}</div>
+                  <div className="text-base mb-2">{t('eventDetails.registerPrompt')}</div>
+                  {isAuthenticated ? (
+                    <>
+                      <div className="flex items-center gap-2 mb-4">
+                        <img
+                          src={user?.avatar_url || "/default-avatar.png"}
+                          className="w-6 h-6 rounded-full"
+                        />
+                        <span className="font-semibold">{user?.name}</span>
+                        <span className="text-sm opacity-70">{user?.email}</span>
+                      </div>
+                      {registrationError && (
+                        <div className="text-red-600 font-semibold mb-2">{registrationError}</div>
+                      )}
+                      {registrationStatus === "confirmed" && (
+                        <div className="text-green-600 font-semibold">{t('eventDetails.alreadyRegistered')}</div>
+                      )}
+                      {registrationStatus === "pending" && (
+                        <div className="text-yellow-600 font-semibold">{t('eventDetails.pendingApproval')}</div>
+                      )}
+                      {registrationStatus === "not_registered" && (
+                        <button
+                          onClick={handleRegister}
+                          className="w-full bg-white text-[#1A1A1A] py-2 rounded shadow-sm hover:bg-[#EEE] transition"
+                        >
+                          {t('eventDetails.registerButton')}
+                        </button>
+                      )}
+                    </>
+                  ) : (
                     <button
-                      onClick={handleRegister}
+                      onClick={() => setShowLogin(true)}
                       className="w-full bg-white text-[#1A1A1A] py-2 rounded shadow-sm hover:bg-[#EEE] transition"
                     >
-                      {t('eventDetails.registerButton')}
+                      {t('eventDetails.loginRegister')}
                     </button>
                   )}
-                </>
-              ) : (
-                <button
-                  onClick={() => setShowLogin(true)}
-                  className="w-full bg-white text-[#1A1A1A] py-2 rounded shadow-sm hover:bg-[#EEE] transition"
-                >
-                  {t('eventDetails.loginRegister')}
-                </button>
-              )}
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
       </div>
     </>
   );

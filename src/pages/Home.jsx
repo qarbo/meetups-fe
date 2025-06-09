@@ -105,6 +105,7 @@ export default function Home() {
                 </Link>
               );
             })}
+            <div className="h-8" />
           </div>
         </div>
         <aside className="hidden md:block sticky top-8 space-y-4">
